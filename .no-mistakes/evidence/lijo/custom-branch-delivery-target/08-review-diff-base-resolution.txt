@@ -1,0 +1,38 @@
+### R1: a reachable origin that does NOT carry the base -> the local branch, with a warning
+PASS  reviewed against the local delivery target branch; only this task's file
+      warning: origin has no feat/stack; reviewing against the local feat/stack (this task's recorded delivery target branch)
+      diff base: refs/heads/feat/stack
+       task.txt | 1 +
+       1 file changed, 1 insertion(+)
+### R2: the same task with NO recorded base -> the default branch drags the stack in
+PASS  no recorded base reviews against origin/main (the pre-change shape)
+      diff base: origin/main
+       stack1.txt | 1 +
+       stack2.txt | 1 +
+       task.txt   | 1 +
+       3 files changed, 3 insertions(+)
+### R3: origin DOES carry the base -> the refreshed remote-tracking ref
+PASS  a pushed base is refreshed from origin
+      diff base: origin/feat/stack
+       task.txt | 1 +
+       1 file changed, 1 insertion(+)
+### R4: origin UNREACHABLE -> refuse; never silently fall back to a base that may lag
+PASS  an unreachable origin refuses the review
+      fatal: '/private/tmp/fmlive/rd/r-unreach/gone.git' does not appear to be a git repository
+      fatal: Could not read from remote repository.
+      
+      Please make sure you have the correct access rights
+      and the repository exists.
+      error: cannot reach origin for /private/tmp/fmlive/rd/r-unreach/project to resolve feat/stack (this task's recorded delivery target branch); refusing to review against a local base that may lag it
+### R5: a base that resolves nowhere -> refuse, naming where it came from
+PASS  an unresolvable base refuses
+      warning: origin has no feat/never-made; reviewing against the local feat/never-made (this task's recorded delivery target branch)
+      error: base refs/heads/feat/never-made does not exist in /private/tmp/fmlive/rd/r-missing/wt (this task's recorded delivery target branch)
+### R6: a tag sharing the base's name does not become the diff base
+PASS  the full refs/heads ref is used, not the shadowing tag
+      warning: origin has no feat/stack; reviewing against the local feat/stack (this task's recorded delivery target branch)
+      diff base: refs/heads/feat/stack
+       task.txt | 1 +
+       1 file changed, 1 insertion(+)
+
+SUMMARY pass=6 fail=0

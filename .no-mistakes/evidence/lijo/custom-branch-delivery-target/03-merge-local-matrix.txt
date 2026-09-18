@@ -1,0 +1,20 @@
+PASS  a recorded base lands through the guarded fast-forward
+      merged fm/m-ok into local feat/stack (24bcb0c -> 39117f8) in /private/tmp/fmlive/ml/m-ok/project
+      main untouched: 8161596 main: baseline
+      no merge commit: 2 parents
+PASS  no recorded base still lands on the project default branch
+      merged fm/m-default into local main (8161596 -> 4b2bbca) in /private/tmp/fmlive/ml/m-default/project
+PASS  a dirty project tree refuses
+      error: /private/tmp/fmlive/ml/m-dirty/project has a dirty working tree; refusing to merge into it
+PASS  the wrong checked-out branch refuses, naming the target
+      error: /private/tmp/fmlive/ml/m-wrong/project is on 'main', expected 'feat/stack' (this task's recorded delivery target branch); cannot merge safely
+PASS  a diverged branch refuses and never becomes a merge commit
+      REFUSED: fm/m-diverged is not a fast-forward of feat/stack (it has diverged).|Measured against feat/stack - this task's recorded delivery target branch.|
+PASS  a recorded base that does not exist refuses
+      error: recorded delivery target branch 'feat/never-made' does not exist in /private/tmp/fmlive/ml/m-missing/project
+PASS  a non-local-only task refuses
+      error: task m-mode is mode=no-mistakes, not local-only; merge PR tasks with bin/fm-pr-merge.sh <id> <PR url> after approval
+PASS  a tag sharing the base's name does not decide the landing
+      merged fm/m-tag into local feat/stack (9fb107c -> 03a6c45) in /private/tmp/fmlive/ml/m-tag/project
+
+SUMMARY pass=8 fail=0

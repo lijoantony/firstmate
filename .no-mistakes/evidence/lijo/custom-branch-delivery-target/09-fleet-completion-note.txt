@@ -1,0 +1,37 @@
+=== the backlog an operator has after these landings ===
+  # Backlog
+  
+  ## In flight
+  - [ ] open-row - Stage the cache (repo: project) (kind: ship) (since 2026-09-18)
+    local feat/stack
+  ## Queued
+  ## Done
+  - [x] stacked-1 - Add the stacked helper (repo: project) (kind: ship) (done 2026-09-18)
+    local feat/stack
+  - [x] plain-main - Tidy the docs (repo: project) (kind: ship) (done 2026-09-18)
+    local main
+  - [x] title-trap - Cache results - local only (repo: project) (kind: ship) (done 2026-09-18)
+  - [x] title-trap2 - Add support for local sockets (repo: project) (kind: ship) (done 2026-09-18)
+  - [x] resolution-row - Answer the captain (repo: project) (kind: ship) (done 2026-09-18)
+    Resolution recorded by fm-captain-hold.
+    local main
+
+=== bin/fm-fleet-snapshot.sh: the structured note it reads ===
+  open-row	state=in_flight	title="Stage the cache"	local_note=null
+  stacked-1	state=done	title="Add the stacked helper"	local_note=local feat/stack
+  plain-main	state=done	title="Tidy the docs"	local_note=local main
+  title-trap	state=done	title="Cache results - local only"	local_note=null
+  title-trap2	state=done	title="Add support for local sockets"	local_note=null
+  resolution-row	state=done	title="Answer the captain"	local_note=null
+
+=== bin/fm-fleet-view.sh: what the operator actually sees ===
+  ## Done
+  | ID | Title | Repo | Kind | Blocked By | Artifact |
+  | --- | --- | --- | --- | --- | --- |
+  | stacked-1 | Add the stacked helper | project | ship | - | local feat/stack |
+  | plain-main | Tidy the docs | project | ship | - | local main |
+  | title-trap | Cache results - local only | project | ship | - | - |
+  | title-trap2 | Add support for local sockets | project | ship | - | - |
+  | resolution-row | Answer the captain | project | ship | - | - |
+  
+  ## Secondmates

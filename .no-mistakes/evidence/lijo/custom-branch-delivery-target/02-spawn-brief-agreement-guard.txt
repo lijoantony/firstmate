@@ -1,0 +1,30 @@
+### Case 4a: brief base=feat/stack, spawn --base other/branch
+PASS  spawn refuses a --base that disagrees with the brief
+   error: delivery mismatch for g4a: the brief says base=feat/stack but this spawn passed base=other/branch; correct the flag or re-scaffold the brief so the branch the worker builds on and the branch this task is recorded to land on agree
+### Case 4b: brief base=feat/stack, spawn passes NO --base
+PASS  spawn refuses an omitted --base when the brief records one
+   error: delivery mismatch for g4b: the brief says base=feat/stack but this spawn passed base=<the repo default branch>; correct the flag or re-scaffold the brief so the branch the worker builds on and the branch this task is recorded to land on agree
+### Case 4c: brief has NO base, spawn --base feat/stack
+PASS  spawn refuses a --base the brief does not record
+   error: delivery mismatch for g4c: the brief says base=<the repo default branch> but this spawn passed base=feat/stack; correct the flag or re-scaffold the brief so the branch the worker builds on and the branch this task is recorded to land on agree
+### Case 4d: hand-adjusted brief prose carries its own 'Delivery contract: ' line (round-2 regression)
+--- brief lines carrying the prefix ---
+6:Delivery contract: land this on the release branch per the captain.
+78:Delivery contract: mode=local-only base=feat/stack
+PASS  prose cannot shadow the contract line: a mode disagreement still refuses
+   error: delivery mismatch for g4d: the brief says mode=local-only but this spawn passed --mode direct-PR; correct the flag or re-scaffold the brief so the worker's instructions and the task record agree
+PASS  prose cannot shadow the contract line: a base disagreement still refuses
+   error: delivery mismatch for g4d: the brief says base=feat/stack but this spawn passed base=other/branch; correct the flag or re-scaffold the brief so the branch the worker builds on and the branch this task is recorded to land on agree
+### Case 4e: scout spawn refuses --base
+PASS  a scout spawn refuses --base
+### Case 4f: --relaunch refuses --base
+PASS  --relaunch refuses --base
+   error: --relaunch reuses the task's recorded delivery target branch; --base cannot override it
+### Case 4g: --base intake validation refuses names the close marker would refuse later
+PASS  intake refuses a whitespace base
+PASS  intake refuses a leading-dash base
+PASS  intake refuses an over-long base
+PASS  intake refuses a syntactically invalid ref
+PASS  intake refuses an empty base
+
+SUMMARY pass=12 fail=0

@@ -1,0 +1,71 @@
+### T1: the headline - one completed task stacked on feat/stack, with and without the record
+PASS  WITHOUT a recorded base the landed task is refused as unlanded (the bug)
+      REFUSED: local-only worktree /private/tmp/fmlive/td/t-nobase/wt has work not yet merged into main and not on any remote.
+      Measured against main - this project's default branch, because the task records no delivery target branch.
+      commits not yet on main:
+      a4233bb task: work
+      4f9d4f6 feat/stack: long-lived groundwork 2
+      af3aa41 feat/stack: long-lived groundwork 1
+      Merge the branch into local main first (bin/fm-merge-local.sh after the captain approves), or push to a fork/remote, or get the captain's explicit OK to discard, then --force.
+PASS  WITH the recorded base the same landed task tears down
+      backlog note line: 7:  local feat/stack
+
+### T2: genuinely unlanded work is still refused, naming the base
+PASS  unlanded work on a based task still refuses
+      REFUSED: local-only worktree /private/tmp/fmlive/td/t-unlanded/wt has work not yet merged into feat/stack and not on any remote.
+      Measured against feat/stack - this task's recorded delivery target branch.
+      commits not yet on feat/stack:
+      030c48a task: work
+      Merge the branch into local feat/stack first (bin/fm-merge-local.sh after the captain approves), or push to a fork/remote, or get the captain's explicit OK to discard, then --force.
+
+### T3: content landed only on the default branch is refused, naming the base
+PASS  landed only on the default branch is refused, naming the base
+
+### T4: a recorded base that resolves nowhere blames the branch, not the index
+PASS  an unresolvable base refuses with the real cause
+      REFUSED: cannot measure this task's landing: the delivery target branch feat/never-created (this task's recorded delivery target branch) does not resolve to a local branch in worktree /private/tmp/fmlive/td/t-missing/wt.
+      A local-only task lands through bin/fm-merge-local.sh, which fast-forwards refs/heads/feat/never-created, so no remote copy can stand in for it here.
+      The git index is readable; the branch is what is missing.
+      Fetch or create feat/never-created, or correct the recorded base= in /private/tmp/fmlive/td/t-missing/home/state/t-missing.meta, then re-run teardown.
+      --force does not answer this: it would discard this worktree's work without ever measuring it.
+
+### T5: an unreachable origin never falls back to a local base that may lag
+PASS  an unreachable origin keeps the landing inconclusive and refuses
+      fatal: '/private/tmp/fmlive/td/t-unreach/gone.git' does not appear to be a git repository
+      fatal: Could not read from remote repository.
+      
+      Please make sure you have the correct access rights
+      and the repository exists.
+      REFUSED: worktree /private/tmp/fmlive/td/t-unreach/wt has work not on any remote and not landed on feat/stack.
+      Measured against feat/stack - this task's recorded delivery target branch.
+      unpushed commits:
+      5fbee4a task: work
+      e46d657 feat/stack: long-lived groundwork 2
+      de6346c feat/stack: long-lived groundwork 1
+      Push the branch, land its PR, or get the captain's explicit OK to discard, then --force.
+
+### T6: a task with no recorded base still writes the pre-existing 'local main' note
+PASS  no recorded base keeps the literal 'local main' note
+      backlog note line: 7:  local main
+
+### T7: a git-legal base containing % survives the durable close marker
+PASS  a base containing % lands and tears down
+      backlog note line: 7:  local feat/50%stack
+
+SUMMARY pass=8 fail=0
+
+### T3a: squash-landed ON the delivery target branch -> ALLOW (content fallback)
+PASS  squash-landed on the delivery target branch tears down
+### T3b: squash-landed only on the DEFAULT branch, base=feat/stack -> REFUSE naming the base
+PASS  squash-landed only on the default branch is refused, naming the base
+      REFUSED: worktree /private/tmp/fmlive/td2/s-main/wt has work not on any remote and not landed on feat/stack.
+      Measured against feat/stack - this task's recorded delivery target branch.
+      unpushed commits:
+      dff135b task: work
+      89926e9 feat/stack: long-lived groundwork 2
+      f5b8817 feat/stack: long-lived groundwork 1
+      Push the branch, land its PR, or get the captain's explicit OK to discard, then --force.
+### T3c: origin reachable and CARRYING the base -> measured against the remote copy
+PASS  a pushed delivery target branch is measured from origin and tears down
+
+SUMMARY pass=3 fail=0

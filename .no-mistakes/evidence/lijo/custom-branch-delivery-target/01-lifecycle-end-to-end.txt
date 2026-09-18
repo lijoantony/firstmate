@@ -1,0 +1,112 @@
+================ 0. the project shape this change exists for ================
+$ git -C project branch -a ; git -C project log --oneline --all
+  refs/heads/feat/stack
+  refs/heads/main
+  refs/remotes/origin/main
+  (origin carries main only; feat/stack is a long-lived LOCAL branch ahead of it)
+
+================ 1. fm-brief.sh --base feat/stack ================
+scaffolded: /private/tmp/fmlive/life/home/data/stacked-1/brief.md (ship, mode=local-only, base=feat/stack; replace {TASK} and {FIRSTMATE_SPEC})
+--- the brief's own words about the landing target ---
+22:1. First action: create your branch from this task's delivery target branch `feat/stack`, resolving its LOCAL ref first: run `git checkout -b fm/stacked-1 refs/heads/feat/stack` when `git rev-parse --verify --quiet refs/heads/feat/stack` resolves, and only otherwise fetch it with `git fetch origin feat/stack && git checkout -b fm/stacked-1 FETCH_HEAD`. Never branch from `origin/feat/stack`: firstmate lands this work onto the local `refs/heads/feat/stack`, so a branch cut from the remote-tracking ref while the local branch is ahead is not a fast-forward and the landing is refused
+25:1. Never push to any remote and never open a PR. Work only on your `fm/stacked-1` branch; firstmate handles the merge into local `feat/stack`.
+76:Delivery contract: mode=local-only base=feat/stack
+79:Keep your branch a clean fast-forward onto `feat/stack`, this task's delivery target branch - if `feat/stack` has advanced, rebase onto it so the eventual merge stays a fast-forward.
+81:The configured merge authority approves the ready branch, then firstmate merges it into local `feat/stack` through the guarded fast-forward path.
+
+================ 2. fm-spawn.sh --base feat/stack (real tmux + real treehouse) ================
+notice: stacked-1 ships mode=local-only while the standing posture for project is no-mistakes - less rigor than the captain's standing posture; proceed only on a current explicit captain instruction or an intake judgment you can state
+spawned stacked-1 harness=bash kind=ship mode=local-only yolo=off base=feat/stack window=firstmate:fm-stacked-1 worktree=/private/tmp/fmlive/life/project/.treehouse/project-07fc92/1/project
+--- the durable task record ---
+  window=firstmate:fm-stacked-1
+  endpoint_task_id=stacked-1
+  worktree=/private/tmp/fmlive/life/project/.treehouse/project-07fc92/1/project
+  project=/private/tmp/fmlive/life/project
+  harness=bash
+  kind=ship
+  mode=local-only
+  yolo=off
+  base=feat/stack
+  tasktmp=/tmp/fm-stacked-1
+  model=default
+  effort=default
+  spawn_gen=s1789733861.19132.21655
+--- the real tmux window ---
+firstmate:0: zsh* (1 panes) [80x24] 
+firstmate:1: fm-stacked-1 (1 panes) [80x24] 
+--- the real worker pane ---
+  treehouse get
+  lijo@MacBook-Pro:/private/tmp/fmlive/life/project/ > treehouse get
+  🌳 Setting up worktree...
+  🌳 Entered worktree at /private/tmp/fmlive/life/project/.treehouse/project-07fc9
+  2/1/project. Type 'exit' to return.
+  lijo@MacBook-Pro:/private/tmp/fmlive/life/project/.treehouse/project-07fc92/1/pr
+  oject/ > export GOTMPDIR=/tmp/fm-stacked-1/gotmp
+  lijo@MacBook-Pro:/private/tmp/fmlive/life/project/.treehouse/project-07fc92/1/pr
+  oject/ > export FM_TASK_ID=stacked-1
+  lijo@MacBook-Pro:/private/tmp/fmlive/life/project/.treehouse/project-07fc92/1/pr
+  oject/ > bash --norc
+  bash-5.3$
+--- the worktree the spawn handed the worker ---
+  /private/tmp/fmlive/life/project/.treehouse/project-07fc92/1/project
+  HEAD: 2dcf0be main: baseline  (detached on the DEFAULT branch)
+
+================ 3. the worker follows the brief's step 1 verbatim ================
+$ git rev-parse --verify --quiet refs/heads/feat/stack && git checkout -b fm/stacked-1 refs/heads/feat/stack
+  ff13f1e feat: add the stacked helper
+  8a72962 chore: treehouse ignore
+
+================ 4. fm-review-diff.sh ================
+warning: origin has no feat/stack; reviewing against the local feat/stack (this task's recorded delivery target branch)
+diff base: refs/heads/feat/stack
+ helper.txt | 1 +
+ 1 file changed, 1 insertion(+)
+--- the same task with base= stripped from its record (pre-change behaviour) ---
+diff base: origin/main
+ .gitignore     | 1 +
+ helper.txt     | 1 +
+ stack1.txt     | 1 +
+ stack2.txt     | 1 +
+ treehouse.toml | 2 ++
+ 5 files changed, 6 insertions(+)
+
+================ 5. fm-teardown.sh BEFORE the landing (must refuse) ================
+REFUSED: local-only worktree /private/tmp/fmlive/life/project/.treehouse/project-07fc92/1/project has work not yet merged into feat/stack and not on any remote.
+Measured against feat/stack - this task's recorded delivery target branch.
+commits not yet on feat/stack:
+ff13f1e feat: add the stacked helper
+Merge the branch into local feat/stack first (bin/fm-merge-local.sh after the captain approves), or push to a fork/remote, or get the captain's explicit OK to discard, then --force.
+  exit=1
+
+================ 6. fm-merge-local.sh ================
+  feat/stack before: 8a72962 chore: treehouse ignore
+merged fm/stacked-1 into local feat/stack (8a72962 -> ff13f1e) in /private/tmp/fmlive/life/project
+  feat/stack after:  ff13f1e feat: add the stacked helper
+  main untouched:    2dcf0be main: baseline
+
+================ 7. fm-teardown.sh AFTER the landing ================
+teardown: reaping leaked worktree process(es) for stacked-1: 20276 20707 22650
+teardown: force-killing leaked worktree process(es) for stacked-1: 20276 20707
+A new version of treehouse is available: v2.0.0 → v2.3.0
+Run "treehouse update" to update
+
+🌳 Worktree returned to pool.
+teardown stacked-1 complete (window firstmate:fm-stacked-1, worktree /private/tmp/fmlive/life/project/.treehouse/project-07fc92/1/project)
+Backlog: stacked-1 is closed in /private/tmp/fmlive/life/home/data/backlog.md. Run bin/fm-tasks-axi.sh ready for dependency-cleared candidates, check date gates, and dispatch only work whose blockers are gone and date is due.
+  exit=0
+
+================ 8. the durable backlog record ================
+  # Backlog
+  
+  ## In flight
+  ## Queued
+  ## Done
+  - [x] stacked-1 - Add the stacked helper (repo: project) (kind: ship) (done 2026-09-18)
+    local feat/stack
+
+================ 9. the operator's fleet view ================
+  ## Done
+  | ID | Title | Repo | Kind | Blocked By | Artifact |
+  | --- | --- | --- | --- | --- | --- |
+  | stacked-1 | Add the stacked helper | project | ship | - | local feat/stack |
+  

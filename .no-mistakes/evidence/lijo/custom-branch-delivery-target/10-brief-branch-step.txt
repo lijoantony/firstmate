@@ -1,0 +1,15 @@
+### local-only-branch
+      brief step 1: 1. First action: create your branch from this task's delivery target branch `feat/stack`, resolving its LOCAL ref first: run `git checkout -...
+      branch head: f549c13 feat/stack: long-lived groundwork 2
+PASS  local-only-branch -> tooktheLOCALref
+### local-ahead-of-origin
+      brief step 1: 1. First action: create your branch from this task's delivery target branch `feat/stack`, resolving its LOCAL ref first: run `git checkout -...
+      branch head: b4d81f3 feat/stack: local is ahead of origin
+PASS  local-ahead-of-origin -> tooktheLOCALref
+PASS  the branch carries the LOCAL tip, so the later landing stays a fast-forward
+### remote-only
+      brief step 1: 1. First action: create your branch from this task's delivery target branch `feat/stack`, resolving its LOCAL ref first: run `git checkout -...
+      branch head: 0ccbca5 feat/stack: long-lived groundwork 2
+PASS  remote-only -> fellbacktotheFETCH
+
+SUMMARY pass=4 fail=0

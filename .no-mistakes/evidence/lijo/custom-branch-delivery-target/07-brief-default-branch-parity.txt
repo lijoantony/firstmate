@@ -1,0 +1,41 @@
+PASS  mode=no-mistakes  byte-identical  bytes=10567  sha256=f15504788924e24a17a3f2c5f660bc1a0e528c68a5a8cf1658c66d46b757b7d1
+      stdout (this branch): scaffolded: <W>/home/data/parity-1/brief.md (ship, mode=no-mistakes; replace {TASK} and {FIRSTMATE_SPEC})
+PASS  mode=direct-PR    byte-identical  bytes=6392  sha256=b82e521043c342cfd20159056d6e6385e0c023d574b1c2abeb809a6588708cc4
+      stdout (this branch): scaffolded: <W>/home/data/parity-1/brief.md (ship, mode=direct-PR; replace {TASK} and {FIRSTMATE_SPEC})
+PASS  mode=local-only   byte-identical  bytes=6610  sha256=2ee79156604cb1d1098dff3eb46d4c229f11e6ea8c04bee17654988741e3ce10
+      stdout (this branch): scaffolded: <W>/home/data/parity-1/brief.md (ship, mode=local-only; replace {TASK} and {FIRSTMATE_SPEC})
+
+And with --base, the same command names the branch instead:
+scaffolded: <W>/home/data/parity-2/brief.md (ship, mode=local-only, base=feat/stack; replace {TASK} and {FIRSTMATE_SPEC})
+      22c22
+      < 1. First action: create your branch: `git checkout -b fm/parity-1`
+      ---
+      > 1. First action: create your branch from this task's delivery target branch `feat/stack`, resolving its LOCAL ref first: run `git checkout -b fm/parity-2 refs/heads/feat/stack` when `git rev-parse --verify --quiet refs/heads/feat/stack` resolves, and only otherwise fetch it with `git fetch origin feat/stack && git checkout -b fm/parity-2 FETCH_HEAD`. Never branch from `origin/feat/stack`: firstmate lands this work onto the local `refs/heads/feat/stack`, so a branch cut from the remote-tracking ref while the local branch is ahead is not a fast-forward and the landing is refused
+      25c25
+      < 1. Never push to any remote and never open a PR. Work only on your `fm/parity-1` branch; firstmate handles the merge into local `main`.
+      ---
+      > 1. Never push to any remote and never open a PR. Work only on your `fm/parity-2` branch; firstmate handles the merge into local `feat/stack`.
+      29c29
+      <    `echo "{state}: {one short line}" >> '<W>/home/state/parity-1.status'`
+      ---
+      >    `echo "{state}: {one short line}" >> '/private/tmp/fmlive/parity2/withbase/home/state/parity-2.status'`
+      64,65c64,65
+      < Firstmate steers you through durable message files in '<W>/home/state/parity-1.inbox'.
+      < When a terminal message says an instruction is waiting there - and at any natural checkpoint when you are unsure - list '<W>/home/state/parity-1.inbox'/*.msg, read and act on each message in numeric order, then acknowledge each handled message by moving it: `mv '<W>/home/state/parity-1.inbox'/NNN.msg '<W>/home/state/parity-1.inbox'/handled/`.
+      ---
+      > Firstmate steers you through durable message files in '/private/tmp/fmlive/parity2/withbase/home/state/parity-2.inbox'.
+      > When a terminal message says an instruction is waiting there - and at any natural checkpoint when you are unsure - list '/private/tmp/fmlive/parity2/withbase/home/state/parity-2.inbox'/*.msg, read and act on each message in numeric order, then acknowledge each handled message by moving it: `mv '/private/tmp/fmlive/parity2/withbase/home/state/parity-2.inbox'/NNN.msg '/private/tmp/fmlive/parity2/withbase/home/state/parity-2.inbox'/handled/`.
+      76c76
+      < Delivery contract: mode=local-only
+      ---
+      > Delivery contract: mode=local-only base=feat/stack
+      78,81c78,81
+      < The task is complete only when committed on your branch `fm/parity-1`. Do NOT push, do NOT open a PR, do NOT merge.
+      < Keep your branch a clean fast-forward onto the current default branch - if `main` has advanced, rebase onto it so the eventual merge stays a fast-forward.
+      < When it is implemented and committed, append `done: ready in branch fm/parity-1` to the status file and stop.
+      < The configured merge authority approves the ready branch, then firstmate merges it into local `main` through the guarded fast-forward path.
+      ---
+      > The task is complete only when committed on your branch `fm/parity-2`. Do NOT push, do NOT open a PR, do NOT merge.
+      > Keep your branch a clean fast-forward onto `feat/stack`, this task's delivery target branch - if `feat/stack` has advanced, rebase onto it so the eventual merge stays a fast-forward.
+      > When it is implemented and committed, append `done: ready in branch fm/parity-2` to the status file and stop.
+      > The configured merge authority approves the ready branch, then firstmate merges it into local `feat/stack` through the guarded fast-forward path.
