@@ -1,0 +1,98 @@
+The two most recent commits were review-round fixes. Each is driven here
+against the PRE-FIX source and this branch, same scenario, same sandbox.
+
+==================================================================
+FIX 1 - e86d807 'resolve the delivery target branch by its full ref'
+Scenario: a TAG named rel/2026.9 shadows the branch of that name.
+==================================================================
+
+--- PRE-FIX tree (eee2d13) ---
+############ M3 (adversarial): a TAG named rel/2026.9 shadows the branch
+#  the tag points at the task branch, the BRANCH does not contain it.
+#  A bare-name resolution would read the tag and call this a fast-forward.
+-- before:
+warning: refname 'rel/2026.9' is ambiguous.
+  rel/2026.9 -> 073f94b   main -> 91d05c6   fm/task-m1 -> 073f94b
+   tag rel/2026.9 -> 073f94b
+$ git merge-base --is-ancestor rel/2026.9 fm/task-m1   # bare name, what git resolves
+warning: refname 'rel/2026.9' is ambiguous.
+   -> ANCESTOR-OK (the tag answered)
+$ fm-merge-local.sh task-m1
+error: /tmp/fm-live-78928/merge/m3/project is on 'heads/rel/2026.9', expected 'rel/2026.9' (this task's recorded delivery target branch); cannot merge safely
+   (exit 1)
+-- after:
+warning: refname 'rel/2026.9' is ambiguous.
+  rel/2026.9 -> 073f94b   main -> 91d05c6   fm/task-m1 -> 073f94b
+
+--- THIS BRANCH ---
+############ M3 (adversarial): a TAG named rel/2026.9 shadows the branch
+#  the tag points at the task branch, the BRANCH does not contain it.
+#  A bare-name resolution would read the tag and call this a fast-forward.
+-- before:
+warning: refname 'rel/2026.9' is ambiguous.
+  rel/2026.9 -> da5132f   main -> c684421   fm/task-m1 -> da5132f
+   tag rel/2026.9 -> da5132f
+$ git merge-base --is-ancestor rel/2026.9 fm/task-m1   # bare name, what git resolves
+warning: refname 'rel/2026.9' is ambiguous.
+   -> ANCESTOR-OK (the tag answered)
+$ fm-merge-local.sh task-m1
+REFUSED: fm/task-m1 is not a fast-forward of rel/2026.9 (it has diverged).
+Measured against rel/2026.9 - this task's recorded delivery target branch.
+Have the crewmate rebase fm/task-m1 onto rel/2026.9, then retry.
+   (exit 1)
+-- after:
+warning: refname 'rel/2026.9' is ambiguous.
+  rel/2026.9 -> da5132f   main -> c684421   fm/task-m1 -> da5132f
+
+
+==================================================================
+FIX 2 - 36c8d50 'anchor the brief contract-line selector on mode='
+Scenario: the brief's hand-written prose carries a 'Delivery contract: '
+line above the generated one, and the spawn disagrees with the real line.
+==================================================================
+
+--- PRE-FIX tree (e86d807) ---
+############ S6 (adversarial): the brief's hand-written prose carries a
+#   'Delivery contract: ' line ABOVE the generated one. The spawn disagrees on mode.
+   prose line : 6:Delivery contract: land this on the release branch per the captain.
+   real line  : 80:Delivery contract: mode=no-mistakes base=rel/2026.9
+$ fm-spawn.sh s6 <project> codex --mode direct-PR --yolo off --base rel/2026.9
+warning: /tmp/fm-live-78928/spawn-evpre/home/data/s6/launch-brief.md records no delivery contract line (scaffolded before ship briefs recorded one); launching on the explicit --mode direct-PR - confirm its definition of done matches
+notice: s6 ships mode=direct-PR while the standing posture for project is no-mistakes - less rigor than the captain's standing posture; proceed only on a current explicit captain instruction or an intake judgment you can state
+spawned s6 harness=codex kind=ship mode=direct-PR yolo=off base=rel/2026.9 window=firstmate:fm-s6 worktree=/tmp/fm-live-78928/spawn-evpre/wt
+   (exit 0)
+   state/s6.meta:
+     project=/tmp/fm-live-78928/spawn-evpre/project
+     kind=ship
+     mode=direct-PR
+     yolo=off
+     base=rel/2026.9
+
+############ S7 (adversarial): same shadowing prose, spawn disagrees on BASE
+$ fm-spawn.sh s7 <project> codex --mode no-mistakes --yolo off --base feat/other
+warning: /tmp/fm-live-78928/spawn-evpre/home/data/s7/launch-brief.md records no delivery contract line (scaffolded before ship briefs recorded one); launching on the explicit --mode no-mistakes - confirm its definition of done matches
+spawned s7 harness=codex kind=ship mode=no-mistakes yolo=off base=feat/other window=firstmate:fm-s7 worktree=/tmp/fm-live-78928/spawn-evpre/wt
+   (exit 0)
+   state/s7.meta:
+     project=/tmp/fm-live-78928/spawn-evpre/project
+     kind=ship
+     mode=no-mistakes
+     yolo=off
+     base=feat/other
+
+--- THIS BRANCH ---
+############ S6 (adversarial): the brief's hand-written prose carries a
+#   'Delivery contract: ' line ABOVE the generated one. The spawn disagrees on mode.
+   prose line : 6:Delivery contract: land this on the release branch per the captain.
+   real line  : 80:Delivery contract: mode=no-mistakes base=rel/2026.9
+$ fm-spawn.sh s6 <project> codex --mode direct-PR --yolo off --base rel/2026.9
+error: delivery mismatch for s6: the brief says mode=no-mistakes but this spawn passed --mode direct-PR; correct the flag or re-scaffold the brief so the worker's instructions and the task record agree
+   (exit 1)
+   state/s6.meta: (absent - nothing was recorded)
+
+############ S7 (adversarial): same shadowing prose, spawn disagrees on BASE
+$ fm-spawn.sh s7 <project> codex --mode no-mistakes --yolo off --base feat/other
+error: delivery mismatch for s7: the brief says base=rel/2026.9 but this spawn passed base=feat/other; correct the flag or re-scaffold the brief so the branch the worker builds on and the branch this task is recorded to land on agree
+   (exit 1)
+   state/s7.meta: (absent - nothing was recorded)
+

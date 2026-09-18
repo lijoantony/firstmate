@@ -1,0 +1,48 @@
+The problem this change fixes, driven against the real bin/fm-teardown.sh.
+One project that ships onto rel/2026.9. The task's work is fully landed there.
+
+########## BEFORE: base commit 9bc051f (no --base exists) ##########
+   task record: mode=local-only 
+   rel/2026.9 -> 0aeead4   main -> 707a42b
+   the task's work is fully landed on rel/2026.9, the branch this project ships onto.
+$ fm-teardown.sh stacked-task     (tree: /tmp/fm-live-78928/basetree)
+REFUSED: local-only worktree /tmp/fm-live-78928/before-ev-old/wt has work not yet merged into main and not on any remote.
+commits not yet on main:
+0aeead4 add the release-note generator
+7b34fda release-line work that main does not have
+Merge the branch into local main first (bin/fm-merge-local.sh after the captain approves), or push to a fork/remote, or get the captain's explicit OK to discard, then --force.
+   (exit 1)
+
+########## AFTER: this branch, task records base=rel/2026.9 ##########
+   task record: mode=local-only base=rel/2026.9 
+   rel/2026.9 -> 4d0679e   main -> 6412ce7
+   the task's work is fully landed on rel/2026.9, the branch this project ships onto.
+$ fm-teardown.sh stacked-task     (tree: /Users/lijo/.no-mistakes/worktrees/1a9267ea2c57/01M2TDQSZR9AZMN0NSVGNMDR87)
+teardown stacked-task complete (window firstmate:fm-stacked-task, worktree /tmp/fm-live-78928/before-ev-new/wt)
+Backlog: stacked-task just finished (this home keeps no markdown backlog at /private/tmp/fm-live-78928/before-ev-new/home/data/backlog.md). Update /private/tmp/fm-live-78928/before-ev-new/home/data/backlog.md - move stacked-task to Done, keep Done to the 10 most recent, then re-scan Queued and dispatch only work whose blockers are gone and date is due.
+   (exit 0)
+
+########## AFTER, control: this branch, task records NO base ##########
+   task record: mode=local-only 
+   rel/2026.9 -> 987b462   main -> 62d7ff9
+   the task's work is fully landed on rel/2026.9, the branch this project ships onto.
+$ fm-teardown.sh stacked-task     (tree: /Users/lijo/.no-mistakes/worktrees/1a9267ea2c57/01M2TDQSZR9AZMN0NSVGNMDR87)
+REFUSED: local-only worktree /tmp/fm-live-78928/before-ev-nobase/wt has work not yet merged into main and not on any remote.
+Measured against main - this project's default branch, because the task records no delivery target branch.
+commits not yet on main:
+987b462 add the release-note generator
+8b5973c release-line work that main does not have
+Merge the branch into local main first (bin/fm-merge-local.sh after the captain approves), or push to a fork/remote, or get the captain's explicit OK to discard, then --force.
+   (exit 1)
+
+########## AFTER, adversarial: recorded base nobody created here ##########
+   task record: mode=local-only base=rel/does-not-exist 
+   rel/2026.9 -> ed93acb   main -> 8a58789
+   the task's work is fully landed on rel/2026.9, the branch this project ships onto.
+$ fm-teardown.sh stacked-task     (tree: /Users/lijo/.no-mistakes/worktrees/1a9267ea2c57/01M2TDQSZR9AZMN0NSVGNMDR87)
+REFUSED: cannot measure this task's landing: the delivery target branch rel/does-not-exist (this task's recorded delivery target branch) does not resolve to a local branch in worktree /tmp/fm-live-78928/before-ev-missing/wt.
+A local-only task lands through bin/fm-merge-local.sh, which fast-forwards refs/heads/rel/does-not-exist, so no remote copy can stand in for it here.
+The git index is readable; the branch is what is missing.
+Fetch or create rel/does-not-exist, or correct the recorded base= in /tmp/fm-live-78928/before-ev-missing/home/state/stacked-task.meta, then re-run teardown.
+--force does not answer this: it would discard this worktree's work without ever measuring it.
+   (exit 1)

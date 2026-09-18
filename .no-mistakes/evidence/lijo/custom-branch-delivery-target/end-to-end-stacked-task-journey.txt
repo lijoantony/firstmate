@@ -1,0 +1,66 @@
+================================================================
+END-TO-END: one local-only task shipped onto a long-lived branch
+Real bin/fm-brief.sh -> fm-spawn.sh -> fm-merge-local.sh -> fm-teardown.sh
+against a real git project, driven in an isolated sandbox.
+================================================================
+
+=== 1. firstmate scaffolds the brief ===
+scaffolded: /tmp/fm-live-78928/journey-stacked/home/data/ship-stacked/brief.md (ship, mode=local-only, base=rel/2026.9; replace {TASK} and {FIRSTMATE_SPEC})
+   brief says the worker lands on: `rel/2026.9`.
+
+=== 2. firstmate spawns the crewmate ===
+notice: ship-stacked ships mode=local-only while the standing posture for project is no-mistakes - less rigor than the captain's standing posture; proceed only on a current explicit captain instruction or an intake judgment you can state
+spawned ship-stacked harness=codex kind=ship mode=local-only yolo=off base=rel/2026.9 window=firstmate:fm-ship-stacked worktree=/tmp/fm-live-78928/journey-stacked/wt
+   durable record: mode=local-only base=rel/2026.9 
+
+=== 3. the crewmate follows step 1 of its brief, then commits ===
+   brief step 1: create your branch from this task's delivery target branch `rel/2026.9`, resolving its LOCAL ref first: run `git checkout -b fm/ship-stacked refs/heads/rel/2026.9` when `git rev-parse --verify --quiet...
+   worker is on: fm/ship-stacked  (branched from 1fa1a4d)
+   fm/ship-stacked -> 7c6f15a
+
+=== 4. the backlog carries the task in flight ===
+
+=== 5. the captain approves; firstmate lands it through the guarded path ===
+merged fm/ship-stacked into local rel/2026.9 (1fa1a4d -> 7c6f15a) in /tmp/fm-live-78928/journey-stacked/project
+   project HEAD branch: rel/2026.9
+   main  -> 47379fa
+   rel/2026.9 -> 7c6f15a
+
+=== 6. firstmate tears the task down (no --force) ===
+teardown ship-stacked complete (window firstmate:fm-ship-stacked, worktree /tmp/fm-live-78928/journey-stacked/wt)
+Backlog: ship-stacked is closed in /private/tmp/fm-live-78928/journey-stacked/home/data/backlog.md. Run bin/fm-tasks-axi.sh ready for dependency-cleared candidates, check date gates, and dispatch only work whose blockers are gone and date is due.
+   (exit 0)
+
+=== 7. the permanent backlog record ===
+## Done
+- [x] ship-stacked - add the release-note generator (kind: ship) (done 2026-09-18)
+  local rel/2026.9
+
+================================================================
+CONTROL: the same journey with no --base anywhere
+================================================================
+
+=== 1. firstmate scaffolds the brief ===
+scaffolded: /tmp/fm-live-78928/journey-default/home/data/ship-default/brief.md (ship, mode=local-only; replace {TASK} and {FIRSTMATE_SPEC})
+   brief says the worker lands on: `main`.
+=== 2. firstmate spawns the crewmate ===
+notice: ship-default ships mode=local-only while the standing posture for project is no-mistakes - less rigor than the captain's standing posture; proceed only on a current explicit captain instruction or an intake judgment you can state
+spawned ship-default harness=codex kind=ship mode=local-only yolo=off window=firstmate:fm-ship-default worktree=/tmp/fm-live-78928/journey-default/wt
+   durable record: mode=local-only 
+=== 3. the crewmate follows step 1 of its brief, then commits ===
+   brief step 1: create your branch: `git checkout -b fm/ship-default`...
+   worker is on: fm/ship-default  (branched from 5084929)
+   fm/ship-default -> 0e05287
+=== 4. the backlog carries the task in flight ===
+=== 5. the captain approves; firstmate lands it through the guarded path ===
+merged fm/ship-default into local main (5084929 -> 0e05287) in /tmp/fm-live-78928/journey-default/project
+   project HEAD branch: main
+   main  -> 0e05287
+=== 6. firstmate tears the task down (no --force) ===
+teardown ship-default complete (window firstmate:fm-ship-default, worktree /tmp/fm-live-78928/journey-default/wt)
+Backlog: ship-default is closed in /private/tmp/fm-live-78928/journey-default/home/data/backlog.md. Run bin/fm-tasks-axi.sh ready for dependency-cleared candidates, check date gates, and dispatch only work whose blockers are gone and date is due.
+   (exit 0)
+=== 7. the permanent backlog record ===
+## Done
+- [x] ship-default - add the release-note generator (kind: ship) (done 2026-09-18)
+  local main

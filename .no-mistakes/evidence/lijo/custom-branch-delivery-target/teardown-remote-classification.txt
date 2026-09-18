@@ -1,0 +1,21 @@
+############ TR1: origin REACHABLE but does not carry rel/2026.9;
+#  the content is squash-landed on the local rel/2026.9 -> teardown proceeds
+   /tmp/fm-live-78928/tdremote/reachable/project: already current
+   teardown task-t1 complete (window firstmate:fm-task-t1, worktree /tmp/fm-live-78928/tdremote/reachable/wt)
+   Backlog: task-t1 just finished (this home keeps no markdown backlog at /private/tmp/fm-live-78928/tdremote/reachable/data/backlog.md). Update /private/tmp/fm-live-78928/tdremote/reachable/data/backlog.md - move task-t1 to Done, keep Done to the 10 most recent, then re-scan Queued and dispatch only work whose blockers are gone and date is due.
+   (exit 0)
+
+############ TR2 (adversarial): identical case, origin UNREACHABLE
+#  the local base may lag origin, so this must NOT clear work for deletion
+   fatal: '/tmp/fm-live-78928/tdremote/unreachable/gone.git' does not appear to be a git repository
+   fatal: Could not read from remote repository.
+   
+   Please make sure you have the correct access rights
+   and the repository exists.
+   REFUSED: worktree /tmp/fm-live-78928/tdremote/unreachable/wt has work not on any remote and not landed on rel/2026.9.
+   Measured against rel/2026.9 - this task's recorded delivery target branch.
+   unpushed commits:
+   4550123 the task's change
+   Push the branch, land its PR, or get the captain's explicit OK to discard, then --force.
+   (exit 1)
+   worktree still present? YES

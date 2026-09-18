@@ -1,0 +1,21 @@
+### Suites run for this change (bin/fm-test-run.sh)
+
+-- run 1: fm-merge-local, fm-review-diff, fm-brief, fm-task-delivery
+-- run 2: fm-teardown, fm-backlog-atomicity, fm-fleet-snapshot-view
+-- run 3: fm-documentation-audiences, fm-captain-hold-lifecycle (after the stub fix)
+
+### Delivery-target-branch cases, verbatim from the runs
+ok - a task recording a non-default delivery target branch tears down once its work is on that branch
+ok - a recorded delivery target branch still refuses genuinely unlanded work, naming that branch
+ok - a task with no recorded delivery target branch still measures the repo default branch
+ok - the content fallback recognizes work squash-landed on the recorded delivery target branch
+ok - content landed only on the default branch is still unlanded for a task targeting a feature branch
+ok - an unresolvable recorded delivery target branch is refused by name, not blamed on the git index
+ok - the content fallback measures a delivery target branch origin does not carry
+ok - the ship path answers an unresolvable delivery target branch exactly as the local-only path does
+ok - worktree whose content already landed in the default branch is torn down (content fallback)
+ok - completion closes a local-only ship, with its landing note, before reporting success
+ok - completion notes the landing on the task's recorded delivery target branch
+ok - recovery replays a landing note naming the task's delivery target branch
+ok - a landing note carrying a control byte never publishes a pending close
+ok - a landing note whose branch contains % round-trips through stage, validate and replay

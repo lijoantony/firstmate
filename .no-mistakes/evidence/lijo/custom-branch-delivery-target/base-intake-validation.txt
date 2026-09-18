@@ -1,0 +1,28 @@
+1) --base is validated at intake, never resolved or inferred (bin/fm-brief.sh)
+
+   whitespace                 exit=1  error: --base branch name must not contain whitespace (got 'rel/ x')
+   leading dash               exit=1  error: --base branch name must not start with a dash (got '-rel')
+   invalid ref '..'           exit=1  error: --base 'rel/..x' is not a valid git branch name
+   trailing slash             exit=1  error: --base 'rel/' is not a valid git branch name
+   257 characters             exit=1  error: --base branch name must be 256 characters or fewer (got 257)
+   empty value                exit=1  error: --base requires a non-empty branch name
+   on a scout brief           exit=1  error: --base applies only to ship briefs; a scout delivers a report and a secondmate charter is not a delivery contract
+   a branch nobody made       exit=0  scaffolded: /tmp/fm-live-78928/home/data/ev8/brief.md (ship, mode=local-only, base=rel/never-created; replace {TASK} and {FIRSTMATE_SPEC})
+
+   The last one is accepted on purpose: validation is git ref SYNTAX only.
+
+2) Omitting --base renders today's brief byte for byte (paths normalized)
+
+   mode=local-only   BYTE-IDENTICAL to base commit 9bc051f (6718 bytes)
+   mode=direct-PR    BYTE-IDENTICAL to base commit 9bc051f (6485 bytes)
+   mode=no-mistakes  BYTE-IDENTICAL to base commit 9bc051f (10709 bytes)
+
+3) The generated brief never names two landing targets
+
+   22:1. First action: create your branch from this task's delivery target branch `rel/2026.9`, resolving its LOCAL ref first: run `git checkout -b fm/t-based refs/heads/rel/2026.9` when `git rev-parse --verify --quiet refs/heads/rel/2026.9` resolves, and only otherwise fetch it with `git fetch origin rel/2026.9 && git checkout -b fm/t-based FETCH_HEAD`. Never branch from `origin/rel/2026.9`: firstmate lands this work onto the local `refs/heads/rel/2026.9`, so a branch cut from the remote-tracking ref while the local branch is ahead is not a fast-forward and the landing is refused
+   25:1. Never push to any remote and never open a PR. Work only on your `fm/t-based` branch; firstmate handles the merge into local `rel/2026.9`.
+   76:Delivery contract: mode=local-only base=rel/2026.9
+   79:Keep your branch a clean fast-forward onto `rel/2026.9`, this task's delivery target branch - if `rel/2026.9` has advanced, rebase onto it so the eventual merge stays a fast-forward.
+   81:The configured merge authority approves the ready branch, then firstmate merges it into local `rel/2026.9` through the guarded fast-forward path.
+
+   occurrences of the word 'main' in that brief: 0

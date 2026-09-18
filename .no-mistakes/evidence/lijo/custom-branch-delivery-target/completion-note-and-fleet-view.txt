@@ -1,0 +1,62 @@
+The completion note is durable history: 'local <delivery target branch>'.
+It rides the pending-close record with only its separating space escaped,
+so a git-legal branch containing % survives an interrupted teardown.
+
+=== 5. the captain approves; firstmate lands it through the guarded path ===
+merged fm/ship-ev-crash into local feat/50%off (4b14922 -> cee300e) in /tmp/fm-live-78928/journey-ev-crash/project
+   project HEAD branch: feat/50%off
+   main  -> ec66a26
+   feat/50%off -> cee300e
+
+=== 6a. teardown is interrupted: the backlog backend dies after the pending close is recorded ===
+error: ship-ev-crash's endpoint and local copy are cleaned up, but its backlog item could not be closed atomically (tasks-axi: backend unavailable); the pending close is recorded and the next session start retries it
+   (exit 1)
+   pending close record left on disk:
+     id=ship-ev-crash
+     data=/private/tmp/fm-live-78928/journey-ev-crash/home/data
+     spawn_gen=s1789746050.67758.22661
+     cleanup_incomplete=0
+     arg=--note
+     arg=local%20feat/50%off
+
+=== 6b. the next session start replays it ===
+BOOTSTRAP_INFO: closed the backlog item for ship-ev-crash that an interrupted cleanup left open
+   pending close record now: cleared
+
+=== 7. the permanent backlog record ===
+## Done
+- [x] ship-ev-crash - add the release-note generator (kind: ship) (done 2026-09-18)
+  local feat/50%off
+
+==================================================================
+The same notes as an end user sees them, rendered by fm-fleet-view.sh
+==================================================================
+
+## Done
+| ID | Title | Repo | Kind | Blocked By | Artifact |
+| --- | --- | --- | --- | --- | --- |
+| ship-stacked | add the release-note generator | - | ship | - | local rel/2026.9 |
+| ship-ev-crash | add the release-note generator | - | ship | - | local feat/50%off |
+| ship-default | add the release-note generator | - | ship | - | local main |
+
+
+==================================================================
+Adversarial render: ordinary titles that end in 'local <word>' must
+stay whole and claim no landing artifact, and a body line on a row
+that is not done is not a landing note.
+==================================================================
+
+## Queued
+| ID | Title | Repo | Kind | Blocked By | Artifact |
+| --- | --- | --- | --- | --- | --- |
+| queued-body-words | Stage the cache | beta | ship | - | - |
+
+## Done
+| ID | Title | Repo | Kind | Blocked By | Artifact |
+| --- | --- | --- | --- | --- | --- |
+| ship-stacked | add the release-note generator | beta | ship | - | local rel/2026.9 |
+| ship-percent | add the release-note generator | beta | ship | - | local feat/50%off |
+| ship-default | add the release-note generator | beta | ship | - | local main |
+| separated-words-done | Cache results - local only | beta | ship | - | - |
+| local-words-done | Add support for local sockets | beta | ship | - | - |
+

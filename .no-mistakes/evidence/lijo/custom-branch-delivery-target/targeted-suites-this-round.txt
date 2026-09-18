@@ -1,0 +1,41 @@
+The repo's own suites for every file this change touches, run with
+bin/fm-test-run.sh. Two invocations, eight scripts, no failures.
+
+FM_TEST_END 2026-09-18T15:34:19Z tests/fm-captain-hold-lifecycle.test.sh exit=0 duration_ms=366717 gate_skip=false
+FM_TEST_END 2026-09-18T15:39:43Z tests/fm-teardown.test.sh exit=0 duration_ms=323416 gate_skip=false
+FM_TEST_END 2026-09-18T15:45:23Z tests/fm-backlog-atomicity.test.sh exit=0 duration_ms=339924 gate_skip=false
+FM_TEST_END 2026-09-18T15:45:51Z tests/fm-fleet-snapshot-view.test.sh exit=0 duration_ms=28108 gate_skip=false
+FM_TEST_SUMMARY total=4 failed=0 skipped_gate=0 duration_ms=1058568
+
+FM_TEST_END tests/fm-review-diff.test.sh  exit=0 duration_ms=9427
+FM_TEST_END tests/fm-brief.test.sh        exit=0 duration_ms=13122
+FM_TEST_END tests/fm-task-delivery.test.sh exit=0 duration_ms=45160
+FM_TEST_END tests/fm-merge-local.test.sh  exit=0 duration_ms=4866
+FM_TEST_SUMMARY total=4 failed=0 skipped_gate=0 duration_ms=63513
+
+The delivery-target cases inside them:
+  ok - a released merge passes the guarded entrypoint and remains recently landed
+  ok - no-mistakes worktree with genuinely unlanded work is refused (safety preserved)
+  ok - a task recording a non-default delivery target branch tears down once its work is on that branch
+  ok - a recorded delivery target branch still refuses genuinely unlanded work, naming that branch
+  ok - a task with no recorded delivery target branch still measures the repo default branch
+  ok - the content fallback recognizes work squash-landed on the recorded delivery target branch
+  ok - content landed only on the default branch is still unlanded for a task targeting a feature branch
+  ok - an unresolvable recorded delivery target branch is refused by name, not blamed on the git index
+  ok - the content fallback measures a delivery target branch origin does not carry
+  ok - an unreachable origin refuses rather than measuring a local base that may lag it
+  ok - the ship path answers an unresolvable delivery target branch exactly as the local-only path does
+  ok - squash-merged task whose local branch followed the pipeline rebase is torn down
+  ok - squash-merged rebased local still refuses a genuinely unlanded follow-up commit
+  ok - worktree whose content already landed in the default branch is torn down (content fallback)
+  ok - dirty worktree is refused even when its committed work has landed (dirty always wins)
+  ok - a landed legacy record with a dead endpoint tears down and logs its accepted incarnation
+  ok - --legacy-record never relaxes the unlanded-work refusal
+  ok - index-lock mtime fault injection is PATH-based; skipped on Darwin where stat is /usr/bin/stat
+  ok - completion closes a local-only ship, with its landing note, before reporting success
+  ok - completion notes the landing on the task's recorded delivery target branch
+  ok - session start finishes a close an interrupted cleanup recorded but never landed
+  ok - recovery replays a landing note naming the task's delivery target branch
+  ok - a landing note carrying a control byte never publishes a pending close
+  ok - a landing note whose branch contains % round-trips through stage, validate and replay
+  ok - bootstrap data-disappears fault injection is PATH-based; skipped on Darwin where stat is /usr/bin/stat

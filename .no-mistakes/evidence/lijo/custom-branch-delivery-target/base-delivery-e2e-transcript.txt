@@ -1,0 +1,260 @@
+
+========================================================
+FIXTURE: project 'stacker' delivers onto the long-lived branch feat/stack
+========================================================
+$ git -C '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/stacker' log --oneline --all --decorate
+e7cca62 (HEAD -> feat/stack) feat/stack: more groundwork
+c949950 (origin/main, origin/HEAD, main) main baseline
+037d119 feat/stack: groundwork
+$ git -C '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/stacker' ls-remote --heads origin
+c94995009dc53a791359dc8590b07e42bc75e89e	refs/heads/main
+(origin carries main only: feat/stack was never pushed)
+
+========================================================
+SCENARIO 1 - the ship brief names the delivery target branch
+========================================================
+
+--- firstmate scaffolds the brief for task stack-1
+$ fm '/Users/lijo/.no-mistakes/worktrees/1a9267ea2c57/01M2TDQSZR9AZMN0NSVGNMDR87/bin/fm-brief.sh' stack-1 stacker --mode local-only --base feat/stack
+scaffolded: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home/data/stack-1/brief.md (ship, mode=local-only, base=feat/stack; replace {TASK} and {FIRSTMATE_SPEC})
+
+--- the generated brief's contract line, branch step, Rule 1 and definition of done
+76:Delivery contract: mode=local-only base=feat/stack
+22:1. First action: create your branch from this task's delivery target branch `feat/stack`, resolving its LOCAL ref first: run `git checkout -b fm/stack-1 refs/heads/feat/stack` when `git rev-parse --verify --quiet refs/heads/feat/stack` resolves, and only otherwise fetch it with `git fetch origin feat/stack && git checkout -b fm/stack-1 FETCH_HEAD`. Never branch from `origin/feat/stack`: firstmate lands this work onto the local `refs/heads/feat/stack`, so a branch cut from the remote-tracking ref while the local branch is ahead is not a fast-forward and the landing is refused
+25:1. Never push to any remote and never open a PR. Work only on your `fm/stack-1` branch; firstmate handles the merge into local `feat/stack`.
+79:Keep your branch a clean fast-forward onto `feat/stack`, this task's delivery target branch - if `feat/stack` has advanced, rebase onto it so the eventual merge stays a fast-forward.
+81:The configured merge authority approves the ready branch, then firstmate merges it into local `feat/stack` through the guarded fast-forward path.
+PASS: contract line records mode and base
+PASS: branch step starts from the LOCAL refs/heads/feat/stack
+PASS: the brief forbids branching from origin/feat/stack
+PASS: Rule 1 and the DoD name one landing target (feat/stack)
+PASS: no sentence in the brief still says it lands on main
+
+--- the worker's own branch step, executed verbatim in a fresh worktree
+probe branched at: e7cca62 feat/stack: more groundwork
+PASS: running the brief's branch step puts the worker on the local feat/stack tip
+
+========================================================
+SCENARIO 2 - omitting --base renders the pre-change brief byte for byte
+========================================================
+PASS: mode=no-mistakes without --base is byte-identical to the pre-change brief
+PASS: mode=direct-PR without --base is byte-identical to the pre-change brief
+PASS: mode=local-only without --base is byte-identical to the pre-change brief
+$ diff <pre-change brief> <post-change brief>   (local-only, no --base)
+(no differences)
+$ sed -n '/Delivery contract/,/guarded fast-forward/p' <post-change local-only brief without --base>
+Delivery contract: mode=local-only
+This task ships **local-only**: no remote, no PR, no pipeline.
+The task is complete only when committed on your branch `fm/cmp-local-only`. Do NOT push, do NOT open a PR, do NOT merge.
+Keep your branch a clean fast-forward onto the current default branch - if `main` has advanced, rebase onto it so the eventual merge stays a fast-forward.
+When it is implemented and committed, append `done: ready in branch fm/cmp-local-only` to the status file and stop.
+The configured merge authority approves the ready branch, then firstmate merges it into local `main` through the guarded fast-forward path.
+
+========================================================
+SCENARIO 3 - the spawn carries the base into the durable task record
+========================================================
+
+--- spawn the crewmate with the matching --base
+$ fm FM_BACKEND=tmux TMUX='fake,1,0' FM_FAKE_PANE_PATH='/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt' '/Users/lijo/.no-mistakes/worktrees/1a9267ea2c57/01M2TDQSZR9AZMN0NSVGNMDR87/bin/fm-spawn.sh' stack-1 '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/stacker' claude --mode local-only --yolo off --base feat/stack
+notice: stack-1 ships mode=local-only while the standing posture for stacker is no-mistakes - less rigor than the captain's standing posture; proceed only on a current explicit captain instruction or an intake judgment you can state
+spawned stack-1 harness=claude kind=ship mode=local-only yolo=off base=feat/stack window=firstmate:fm-stack-1 worktree=/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt
+
+--- the durable task record
+$ cat '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home/state/stack-1.meta' | grep -E '^(kind|mode|yolo|base|project|worktree)='
+worktree=/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt
+project=/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/stacker
+kind=ship
+mode=local-only
+yolo=off
+base=feat/stack
+PASS: state/stack-1.meta records base=feat/stack
+
+--- ADVERSARIAL: a spawn whose --base disagrees with the brief must refuse
+$ fm-spawn.sh stack-2 ... --mode local-only --yolo off --base feat/other
+error: delivery mismatch for stack-2: the brief says base=feat/stack but this spawn passed base=feat/other; correct the flag or re-scaffold the brief so the branch the worker builds on and the branch this task is recorded to land on agree
+PASS: spawn with --base feat/other against a base=feat/stack brief refused and wrote no record
+$ fm-spawn.sh stack-2 ... --mode local-only --yolo off <no --base>
+error: delivery mismatch for stack-2: the brief says base=feat/stack but this spawn passed base=<the repo default branch>; correct the flag or re-scaffold the brief so the branch the worker builds on and the branch this task is recorded to land on agree
+PASS: spawn with no --base against a base=feat/stack brief refused and wrote no record
+
+--- ADVERSARIAL: brief prose carrying a 'Delivery contract: ' line cannot shadow the generated one
+error: delivery mismatch for stack-3: the brief says base=feat/stack but this spawn passed base=feat/other; correct the flag or re-scaffold the brief so the branch the worker builds on and the branch this task is recorded to land on agree
+PASS: prose 'Delivery contract:' line did not downgrade the guard to the warn-and-launch path
+
+--- ADVERSARIAL: --relaunch refuses an explicit --base
+error: --relaunch reuses the task's recorded delivery target branch; --base cannot override it
+
+--- ADVERSARIAL: branch names refused at intake
+$ fm-brief.sh ... --base feat stack
+error: --base branch name must not contain whitespace (got 'feat stack')
+PASS: refused base 'feat stack' scaffolded nothing
+$ fm-brief.sh ... --base -force
+error: --base branch name must not start with a dash (got '-force')
+PASS: refused base '-force' scaffolded nothing
+$ fm-brief.sh ... --base feat/..stack
+error: --base 'feat/..stack' is not a valid git branch name
+PASS: refused base 'feat/..stack' scaffolded nothing
+$ fm-brief.sh ... --base xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+error: --base branch name must be 256 characters or fewer (got 257)
+PASS: refused base 'xxxxxxxxxxxxxxxxxxxx' scaffolded nothing
+
+========================================================
+SCENARIO 4 - the review diff is taken against the delivery target branch
+========================================================
+
+--- the crewmate follows the brief's branch step, then commits its slice
+brief branch step: git checkout -b fm/stack-1 refs/heads/feat/stack
+Previous HEAD position was c949950 main baseline
+Switched to a new branch 'fm/stack-1'
+$ fm '/Users/lijo/.no-mistakes/worktrees/1a9267ea2c57/01M2TDQSZR9AZMN0NSVGNMDR87/bin/fm-review-diff.sh' stack-1 --stat
+warning: origin has no feat/stack; reviewing against the local feat/stack (this task's recorded delivery target branch)
+diff base: refs/heads/feat/stack
+ stage-three.txt | 1 +
+ 1 file changed, 1 insertion(+)
+PASS: review diff base is refs/heads/feat/stack
+PASS: the diff shows this task's file
+PASS: the diff does NOT drag in the feature branch's own commits
+PASS: a reachable origin without the branch says so and uses the local ref
+
+--- ADVERSARIAL: an UNREACHABLE origin must refuse, never fall back to a possibly-stale local base
+error: cannot reach origin for /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/stacker to resolve feat/stack (this task's recorded delivery target branch); refusing to review against a local base that may lag it
+PASS: unreachable origin refuses the review rather than guessing a base
+
+========================================================
+SCENARIO 5 - cleanup refuses work that has not landed on feat/stack
+========================================================
+REFUSED: local-only worktree /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt has work not yet merged into feat/stack and not on any remote.
+Measured against feat/stack - this task's recorded delivery target branch.
+commits not yet on feat/stack:
+3bca894 stage three on top of feat/stack
+Merge the branch into local feat/stack first (bin/fm-merge-local.sh after the captain approves), or push to a fork/remote, or get the captain's explicit OK to discard, then --force.
+PASS: teardown refuses genuinely unlanded work
+PASS: the worktree holding unlanded work still exists
+
+========================================================
+SCENARIO 6 - the guarded fast-forward lands onto feat/stack, not main
+========================================================
+$ fm '/Users/lijo/.no-mistakes/worktrees/1a9267ea2c57/01M2TDQSZR9AZMN0NSVGNMDR87/bin/fm-merge-local.sh' stack-1
+merged fm/stack-1 into local feat/stack (e7cca62 -> 3bca894) in /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/stacker
+PASS: bin/fm-merge-local.sh landed the task
+PASS: feat/stack fast-forwarded to the task branch
+PASS: main was NOT moved by this landing
+$ git -C '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/stacker' log --oneline --decorate -3 feat/stack
+3bca894 (HEAD -> feat/stack, fm/stack-1) stage three on top of feat/stack
+e7cca62 feat/stack: more groundwork
+037d119 feat/stack: groundwork
+
+========================================================
+SCENARIO 7 - cleanup accepts the landed work and records the real branch
+========================================================
+$ fm '/Users/lijo/.no-mistakes/worktrees/1a9267ea2c57/01M2TDQSZR9AZMN0NSVGNMDR87/bin/fm-teardown.sh' stack-1
+teardown stack-1 complete (window firstmate:fm-stack-1, worktree /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt)
+Backlog: stack-1 is closed in /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home/data/backlog.md. Run bin/fm-tasks-axi.sh ready for dependency-cleared candidates, check date gates, and dispatch only work whose blockers are gone and date is due.
+PASS: teardown of landed work succeeds without --force
+
+--- the permanent backlog record
+$ sed -n '/## Done/,$p' '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home/data/backlog.md'
+## Done
+- [x] stack-1 - stacked slice (kind: ship) (done 2026-09-18)
+  local feat/stack
+PASS: the completion note names the branch it actually landed on
+
+========================================================
+SCENARIO 7b - ADVERSARIAL: a TAG named feat/stack must not decide anything
+========================================================
+(the project now holds BOTH refs/heads/feat/stack and refs/tags/feat/stack)
+$ git rev-parse --short refs/heads/feat/stack -> 3bca894
+$ git rev-parse --short refs/tags/feat/stack  -> c949950
+$ git rev-parse --short feat/stack        # a BARE name resolves to the tag
+c949950
+$ git -C <project> symbolic-ref --short HEAD   # reports heads/... once shadowed
+heads/feat/stack
+
+--- a second stacked task, briefed and spawned with the same --base
+notice: stack-4 ships mode=local-only while the standing posture for stacker is no-mistakes - less rigor than the captain's standing posture; proceed only on a current explicit captain instruction or an intake judgment you can state
+spawned stack-4 harness=claude kind=ship mode=local-only yolo=off base=feat/stack window=firstmate:fm-stack-4 worktree=/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt4
+$ fm '/Users/lijo/.no-mistakes/worktrees/1a9267ea2c57/01M2TDQSZR9AZMN0NSVGNMDR87/bin/fm-merge-local.sh' stack-4
+merged fm/stack-4 into local feat/stack (3bca894 -> 904e502) in /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/stacker
+PASS: the landing succeeds while a same-named tag exists
+PASS: the BRANCH refs/heads/feat/stack is what fast-forwarded
+PASS: the tag was not moved
+PASS: main was not moved
+
+--- and cleanup measures the branch, not the tag
+teardown stack-4 complete (window firstmate:fm-stack-4, worktree /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt4)
+Backlog: stack-4 is closed in /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home/data/backlog.md. Run bin/fm-tasks-axi.sh ready for dependency-cleared candidates, check date gates, and dispatch only work whose blockers are gone and date is due.
+PASS: teardown accepts work landed on the shadowed branch
+
+========================================================
+SCENARIO 8 - REGRESSION PROOF: the pre-change scripts refuse this same landed task
+========================================================
+
+--- PRE-CHANGE bin/fm-teardown.sh (base commit 9bc051f) on work landed on feat/stack
+REFUSED: local-only worktree /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt9 has work not yet merged into main and not on any remote.
+commits not yet on main:
+36a4cce task work
+376eccc feat/stack groundwork
+Merge the branch into local main first (bin/fm-merge-local.sh after the captain approves), or push to a fork/remote, or get the captain's explicit OK to discard, then --force.
+PASS: the OLD teardown refuses this landed task (the defect this change fixes)
+
+--- POST-CHANGE bin/fm-teardown.sh on the identical fixture
+teardown stack-9 complete (window firstmate:fm-stack-9, worktree /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt9)
+Backlog: stack-9 just finished (this home keeps no markdown backlog at /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home2/data/backlog.md). Update /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home2/data/backlog.md - move stack-9 to Done, keep Done to the 10 most recent, then re-scan Queued and dispatch only work whose blockers are gone and date is due.
+PASS: the NEW teardown accepts the identical landed task without --force
+
+========================================================
+SCENARIO 9 - ADVERSARIAL: a recorded base naming a branch nobody created
+========================================================
+REFUSED: cannot measure this task's landing: the delivery target branch feat/never-created (this task's recorded delivery target branch) does not resolve to a local branch in worktree /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt8.
+A local-only task lands through bin/fm-merge-local.sh, which fast-forwards refs/heads/feat/never-created, so no remote copy can stand in for it here.
+The git index is readable; the branch is what is missing.
+Fetch or create feat/never-created, or correct the recorded base= in /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home3/state/stack-8.meta, then re-run teardown.
+--force does not answer this: it would discard this worktree's work without ever measuring it.
+PASS: an unresolvable delivery target branch refuses with its real cause
+PASS: the worktree was not discarded by that refusal
+
+========================================================
+SCENARIO 10 - ADVERSARIAL: origin carries mirror/feat/stack but not feat/stack
+========================================================
+$ git -C '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/stacker4' ls-remote --heads origin
+78fc14e208be8fd2e48095243907b49f17fdd52e	refs/heads/main
+78fc14e208be8fd2e48095243907b49f17fdd52e	refs/heads/mirror/feat/stack
+$ git ls-remote --exit-code --heads origin feat/stack              -> exit 0 (a BARE name matches the decoy)
+$ git ls-remote --exit-code --heads origin refs/heads/feat/stack   -> exit 2 (absent, which is the truth)
+/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/stacker4: STUCK: on branch feat/stack with uncommitted changes, 0 commits behind origin/main - needs attention
+teardown stack-7 complete (window firstmate:fm-stack-7, worktree /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/wt7)
+Backlog: stack-7 just finished (this home keeps no markdown backlog at /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home4/data/backlog.md). Update /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home4/data/backlog.md - move stack-7 to Done, keep Done to the 10 most recent, then re-scan Queued and dispatch only work whose blockers are gone and date is due.
+PASS: teardown measured the LOCAL feat/stack, not the remote decoy, and accepted the landed work
+
+========================================================
+SCENARIO 11 - the fleet view publishes the branch each task landed on
+========================================================
+
+--- bin/fm-fleet-view.sh, rendered from this home's real backlog
+# Fleet View
+
+Schema: fm-fleet-snapshot.v1
+Home: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd/home
+
+## Under Way
+No live task metadata found.
+
+## Queued
+No queued backlog records found.
+
+## Done
+| ID | Title | Repo | Kind | Blocked By | Artifact |
+| --- | --- | --- | --- | --- | --- |
+| stack-4 | fourth stacked slice | - | ship | - | local feat/stack |
+| stack-1 | stacked slice | - | ship | - | local feat/stack |
+
+## Secondmates
+For kind=secondmate, bearings selects validated structured state from that registered home; parent events and bounded terminal evidence are fallback-only supplements and never current-state authority.
+PASS: the landed-artifact column names feat/stack, not main
+PASS: no landed task is published as having landed on main
+
+========================================================
+RESULT
+========================================================
+ALL E2E CHECKS PASSED
+fixture root: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-base-e2e.iHuGYd

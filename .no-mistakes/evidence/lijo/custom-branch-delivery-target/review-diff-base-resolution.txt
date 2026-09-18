@@ -1,0 +1,62 @@
+############ R1: base recorded, origin carries it
+diff base: origin/rel/2026.9
+ task.txt | 1 +
+ 1 file changed, 1 insertion(+)
+   (exit 0)
+
+############ R2: base recorded, origin REACHABLE but does not carry it
+#  (the normal shape: a local-only task's Rule 1 forbids pushing its base)
+warning: origin has no rel/2026.9; reviewing against the local rel/2026.9 (this task's recorded delivery target branch)
+diff base: refs/heads/rel/2026.9
+ task.txt | 1 +
+ 1 file changed, 1 insertion(+)
+   (exit 0)
+
+############ R3 (adversarial): origin UNREACHABLE - must refuse, never fall back
+   fatal: '/tmp/fm-live-78928/review/r3/gone.git' does not appear to be a git repository
+   fatal: Could not read from remote repository.
+   
+   Please make sure you have the correct access rights
+   and the repository exists.
+   error: cannot reach origin for /tmp/fm-live-78928/review/r3/project to resolve rel/2026.9 (this task's recorded delivery target branch); refusing to review against a local base that may lag it
+   (exit 1)
+
+############ R4 (adversarial): origin carries only mirror/rel/2026.9
+#  a bare-name ls-remote pattern would match it and diff against a stale remote
+warning: origin has no rel/2026.9; reviewing against the local rel/2026.9 (this task's recorded delivery target branch)
+diff base: refs/heads/rel/2026.9
+ task.txt | 1 +
+ 1 file changed, 1 insertion(+)
+   (exit 0)
+   origin heads: refs/heads/main refs/heads/mirror/rel/2026.9 
+
+############ R5: NO base recorded -> the repo default branch, as before
+diff base: origin/main
+ shared.txt | 1 +
+ task.txt   | 1 +
+ 2 files changed, 2 insertions(+)
+   (exit 0)
+
+############ R6 (adversarial): a local TAG named rel/2026.9 shadows the branch
+   tag rel/2026.9 -> 8f2b93e  branch -> a2f1977
+warning: origin has no rel/2026.9; reviewing against the local rel/2026.9 (this task's recorded delivery target branch)
+diff base: refs/heads/rel/2026.9
+ task.txt | 1 +
+ 1 file changed, 1 insertion(+)
+   (exit 0)
+
+############ R7: project with no remote at all -> the local base
+diff base: refs/heads/rel/2026.9
+ task.txt | 1 +
+ 1 file changed, 1 insertion(+)
+   (exit 0)
+
+Why R4 matters - the ls-remote pattern must be the FULL ref.
+Same repo, same remote, the only difference is the pattern:
+
+$ git ls-remote --exit-code --heads origin rel/2026.9      # bare name
+   2e00f5814b68b3f3004fb1ef93157aeab03e5ef8	refs/heads/mirror/rel/2026.9
+   exit 0  -> a remote mirror/ branch is read as 'the base is on origin'
+
+$ git ls-remote --exit-code --heads origin refs/heads/rel/2026.9   # what the product asks
+   exit 2  -> the remote is reachable and has no such branch

@@ -1,0 +1,55 @@
+############ M1: task records base=rel/2026.9, branch is a fast-forward of it
+-- before:
+  rel/2026.9 -> 71ac030   main -> 9cb7fa0   fm/task-m1 -> 0a29a4a
+$ fm-merge-local.sh task-m1
+merged fm/task-m1 into local rel/2026.9 (71ac030 -> 0a29a4a) in /tmp/fm-live-78928/merge/m1/project
+   (exit 0)
+-- after:
+  rel/2026.9 -> 0a29a4a   main -> 9cb7fa0   fm/task-m1 -> 0a29a4a
+
+############ M2: task records NO base -> the default branch, exactly as before
+-- before:
+  rel/2026.9 -> 2d495ec   main -> a1b877b   fm/task-m1 -> ac021e2
+$ fm-merge-local.sh task-m1
+merged fm/task-m1 into local main (a1b877b -> ac021e2) in /tmp/fm-live-78928/merge/m2/project
+   (exit 0)
+-- after:
+  rel/2026.9 -> 2d495ec   main -> ac021e2   fm/task-m1 -> ac021e2
+
+############ M3 (adversarial): a TAG named rel/2026.9 shadows the branch
+#  the tag points at the task branch, the BRANCH does not contain it.
+#  A bare-name resolution would read the tag and call this a fast-forward.
+-- before:
+warning: refname 'rel/2026.9' is ambiguous.
+  rel/2026.9 -> ac021e2   main -> a1b877b   fm/task-m1 -> ac021e2
+   tag rel/2026.9 -> ac021e2
+$ git merge-base --is-ancestor rel/2026.9 fm/task-m1   # bare name, what git resolves
+warning: refname 'rel/2026.9' is ambiguous.
+   -> ANCESTOR-OK (the tag answered)
+$ fm-merge-local.sh task-m1
+REFUSED: fm/task-m1 is not a fast-forward of rel/2026.9 (it has diverged).
+Measured against rel/2026.9 - this task's recorded delivery target branch.
+Have the crewmate rebase fm/task-m1 onto rel/2026.9, then retry.
+   (exit 1)
+-- after:
+warning: refname 'rel/2026.9' is ambiguous.
+  rel/2026.9 -> ac021e2   main -> a1b877b   fm/task-m1 -> ac021e2
+
+############ M4: branch diverged from the recorded base
+$ fm-merge-local.sh task-m1
+REFUSED: fm/task-m1 is not a fast-forward of rel/2026.9 (it has diverged).
+Measured against rel/2026.9 - this task's recorded delivery target branch.
+Have the crewmate rebase fm/task-m1 onto rel/2026.9, then retry.
+   (exit 1)
+-- after:
+  rel/2026.9 -> bb9b011   main -> 7a1c936   fm/task-m1 -> beea81c
+
+############ M5: recorded base names a branch nobody created here
+$ fm-merge-local.sh task-m1
+error: recorded delivery target branch 'rel/nope' does not exist in /tmp/fm-live-78928/merge/m5/project
+   (exit 1)
+
+############ M6: project checked out on the wrong branch
+$ fm-merge-local.sh task-m1
+error: /tmp/fm-live-78928/merge/m6/project is on 'main', expected 'rel/2026.9' (this task's recorded delivery target branch); cannot merge safely
+   (exit 1)
