@@ -100,6 +100,13 @@ git -C "$REMOTE_ROOT" commit -qm 'remote fixture root'
 
 cat > "$FAKEBIN/fake-ssh" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 while [ "$#" -gt 0 ]; do
   case "$1" in -o) shift 2 ;; --) shift; break ;; *) exit 90 ;; esac
 done

@@ -4547,8 +4547,18 @@ if [ "$LAUNCH_ENV_ENABLED" = 1 ]; then
   fi
   LAUNCH="$LAUNCH_ENV_PREFIX /bin/sh -c $(shell_quote "$LAUNCH")"
 fi
+# A terminal line discipline caps one canonical input line (1024 bytes on
+# macOS), and a Claude launch with its system prompt, settings, and environment
+# prefix exceeds it, so the pane shell would read a truncated command. Write the
+# exact command to a private per-task file and type only a short line that
+# sources it, so the pane shell runs the same text it would have read.
+LAUNCH_FILE="$STATE_REAL/$ID.launch"
+if ! (umask 077 && printf '%s\n' "$LAUNCH" >"$LAUNCH_FILE"); then
+  echo "error: could not write the launch command to $LAUNCH_FILE" >&2
+  exit 1
+fi
 sleep 0.3
-spawn_send_literal "$T" "$LAUNCH"
+spawn_send_literal "$T" ". $(shell_quote "$LAUNCH_FILE")"
 sleep 0.3
 if [ "${HERDR_PROJECTED:-0}" -eq 1 ]; then
   HERDR_PROJECTION_ABORT_CLEANUP=0

@@ -33,6 +33,13 @@ make_orca_fakebin() {  # <dir> -> echoes fakebin dir
   cat > "$fb/orca" <<'SH'
 #!/usr/bin/env bash
 set -u
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 LOG="${FM_ORCA_LOG:?}"
 RESP="${FM_ORCA_RESPONSES:?}"
 COUNT_FILE="$RESP/.count"
@@ -72,6 +79,13 @@ neutral_fm_root() {  # <dir> -> echoes a minimal root with a quiet guard
   mkdir -p "$root/bin"
   cat > "$root/bin/fm-guard.sh" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 exit 0
 SH
   chmod +x "$root/bin/fm-guard.sh"
@@ -83,6 +97,13 @@ add_tmux_fake() {
   cat > "$fb/tmux" <<'SH'
 #!/usr/bin/env bash
 set -u
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 LOG="${FM_ORCA_LOG:?}"
 {
   printf 'tmux'

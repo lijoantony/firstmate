@@ -56,6 +56,13 @@ make_tmux_stub() {  # <dir>
   cat > "$fb/tmux" <<'SH'
 #!/usr/bin/env bash
 set -u
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 D=$FM_FAKE_DIR
 case "${1:-}" in
   send-keys)
@@ -125,6 +132,13 @@ SH
   chmod +x "$fb/tmux"
   cat > "$fb/sleep" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 [ -z "${FM_FAKE_LOCK_WAITING:-}" ] || : > "$FM_FAKE_LOCK_WAITING"
 exit 0
 SH
@@ -219,6 +233,13 @@ journal_field() {  # <case-dir> <id> <key>
 make_git_failure_stub() {  # <case-dir>
   cat > "$1/fakebin/git" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 case "${FM_FAKE_GIT_FAILURE:-}:$*" in
   head:*' rev-parse --verify HEAD'|head:*' symbolic-ref -q HEAD') exit 128 ;;
   status:*' status --porcelain') exit 128 ;;
@@ -231,6 +252,13 @@ SH
 make_mv_failure_stub() {  # <case-dir>
   cat > "$1/fakebin/mv" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 if [ -n "${FM_FAKE_COMPLETE_JOURNAL_MV_FAIL:-}" ]; then
   for path in "$@"; do
     if [ -f "$path" ] && grep -Fqx 'phase=complete' "$path"; then
@@ -263,6 +291,13 @@ SH
 make_rm_failure_stub() {  # <case-dir>
   cat > "$1/fakebin/rm" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 for arg in "$@"; do
   if [ -n "${FM_FAKE_RM_FAIL_PATH:-}" ] && [ "$arg" = "$FM_FAKE_RM_FAIL_PATH" ]; then
     exit 1
@@ -1412,6 +1447,13 @@ test_secondmate_checkpoint_refuses_unreadable_child_state() {
   rmdir "$dir/smhome/state/bad.meta"
   cat > "$dir/fakebin/find" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 exit 1
 SH
   chmod +x "$dir/fakebin/find"

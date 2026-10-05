@@ -48,6 +48,13 @@ make_fake_toolchain() {
   fm_fake_version_tool "$fakebin" lavish-axi FM_FAKE_LAVISH_AXI_VERSION 0.1.46
   cat > "$fakebin/gh-axi" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 if [ "${1:-}" = --version ]; then
   printf '%s\n' "${FM_FAKE_GH_AXI_VERSION:-0.1.29}"
   exit 0
@@ -57,6 +64,13 @@ SH
   chmod +x "$fakebin/gh-axi"
   cat > "$fakebin/gh" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 if [ "${1:-}" = auth ] && [ "${2:-}" = status ]; then
   exit 0
 fi
@@ -65,6 +79,13 @@ SH
   chmod +x "$fakebin/gh"
   cat > "$fakebin/treehouse" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 if [ "${1:-}" = get ] && [ "${2:-}" = --help ]; then
   if [ "${FM_FAKE_TREEHOUSE_LEASE_HELP:-}" = 1 ]; then
     printf '%s\n' 'Usage: treehouse get [--lease] [--lease-holder <holder>]'
@@ -78,6 +99,13 @@ SH
   chmod +x "$fakebin/treehouse"
   cat > "$fakebin/no-mistakes" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 if [ "${1:-}" = --version ]; then
   printf '%s\n' "${FM_FAKE_NO_MISTAKES_VERSION:-no-mistakes version v1.46.0 (fake) 2026-06-27T00:02:18Z}"
   exit 0
@@ -94,6 +122,13 @@ add_quota_axi() {
   local fakebin=$1
   cat > "$fakebin/quota-axi" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 if [ "${1:-}" = --version ]; then
   printf '%s\n' "${FM_FAKE_QUOTA_AXI_VERSION:-0.1.29}"
   exit 0
@@ -153,6 +188,13 @@ make_fake_fleet_sync_root() {
   mkdir -p "$fake_root/bin"
   cat > "$fake_root/bin/fm-fleet-sync.sh" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 [ -z "${FM_FAKE_FLEET_SYNC_STARTED_MARKER:-}" ] || : > "$FM_FAKE_FLEET_SYNC_STARTED_MARKER"
 printf '%s\n' 'alpha: synced'
 printf '%s\n' 'beta: skipped: no origin remote'
@@ -849,6 +891,13 @@ make_routine_bootstrap_fixture() {
   add_real_jq "$fakebin"
   cat > "$fakebin/tmux" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 case "${1:-}" in
   display-message)
     case "$*" in
@@ -908,6 +957,13 @@ test_network_phase_partitions_the_run() {
   rm -f "$fakebin/node"
   cat > "$fakebin/gh" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 exit 1
 SH
   chmod +x "$fakebin/gh"
@@ -951,6 +1007,13 @@ test_network_sweeps_recheck_lock_ownership() {
   mkdir -p "$fake_root/bin"
   cat > "$fake_root/bin/fm-fleet-sync.sh" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 : > "${FM_FAKE_FLEET_SYNC_STARTED_MARKER:?}"
 SH
   chmod +x "$fake_root/bin/fm-fleet-sync.sh"
@@ -1047,6 +1110,13 @@ test_tasks_axi_verdict_handoff_is_consumed_once() {
   log="$case_dir/tasks-axi.log"
   cat > "$fakebin/tasks-axi" <<'SH'
 #!/usr/bin/env bash
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 printf '%s\n' "$*" >> "${FM_FAKE_TASKS_AXI_LOG:?}"
 printf '0.0.1\n'
 exit 0

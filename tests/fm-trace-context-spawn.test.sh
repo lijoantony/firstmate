@@ -79,7 +79,7 @@ case "${1:-}" in
           -t) skip_next=1; continue ;;
           -l) continue ;;
           Enter|C-m) continue ;;
-          *) printf '%s\n' "$a" >> "$FM_FAKE_LAUNCH_LOG" ;;
+          *) case "$a" in ". '"*".launch'") _f=${a#". '"}; cat "${_f%"'"}" ;; *) printf '%s\n' "$a" ;; esac >> "$FM_FAKE_LAUNCH_LOG" ;;
         esac
       done
     fi

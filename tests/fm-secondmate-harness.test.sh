@@ -666,7 +666,7 @@ case "${1:-}" in
       prev=
       for a in "$@"; do
         if [ "$prev" = "-l" ]; then
-          printf '%s\n' "$a" >> "$FM_FAKE_LAUNCH_LOG"
+          case "$a" in ". '"*".launch'") _f=${a#". '"}; cat "${_f%"'"}" ;; *) printf '%s\n' "$a" ;; esac >> "$FM_FAKE_LAUNCH_LOG"
         fi
         prev=$a
       done

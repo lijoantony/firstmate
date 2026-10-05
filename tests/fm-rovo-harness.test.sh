@@ -70,6 +70,7 @@ case "${1:-}" in
       if [ "$prev" = -l ]; then literal=$arg; break; fi
       prev=$arg
     done
+    case "$literal" in ". '"*".launch'") _f=${literal#". '"}; literal=$(cat "${_f%"'"}") ;; esac
     if [ -n "$literal" ]; then
       case "$literal" in
         *'run --yolo'*)
