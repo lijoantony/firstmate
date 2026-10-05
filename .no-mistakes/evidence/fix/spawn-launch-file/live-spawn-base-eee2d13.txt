@@ -1,0 +1,27 @@
+== run root: /var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T//fm-base-eee2d13.OEpZxR (snapshot) pane shell: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-base.a86TjM/case/fake/fakebin/pane-shell
+== fm-spawn exit: 0
+warning: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-base.a86TjM/case/home/data/live-claude-launch-base/launch-brief.md records no delivery contract line (scaffolded before ship briefs recorded one); launching on the explicit --mode no-mistakes - confirm its definition of done matches
+spawned live-claude-launch-base harness=claude kind=ship mode=no-mistakes yolo=off window=firstmate:fm-live-claude-launch-base worktree=/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-base.a86TjM/case/pool/1/wt
+== typed send-keys -l payload(s), byte length:
+  1201 bytes: send-keys -t firstmate:fm-live-claude-launch-base -l env -u CURSOR_AGENT -u CURSOR_INVOKED_AS -u GEMINI_CLI CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false CLAUDE_CO
+== launch file: none
+== stand-in claude argv log:
+  argc=30
+  --append-system-prompt present: 1
+  .
+  The Definition of done's rule that `--intent` must be self-sufficient still governs the string you pass: resolve any report, decision, or PR the intent below refers to into its substance rather than passing the pointer.
+  
+  ## Captain intent authorized for --intent
+  brief for live-claude-launch-base>
+== pane capture (tail):
+  | The default interactive shell is now zsh.
+  | To update your account to use zsh, please run `chsh -s /bin/zsh`.
+  | For more details, please visit https://support.apple.com/kb/HT208050.
+  | bash-3.2$ treehouse get
+  | The default interactive shell is now zsh.
+  | To update your account to use zsh, please run `chsh -s /bin/zsh`.
+  | For more details, please visit https://support.apple.com/kb/HT208050.
+  | bash-3.2$ export GOTMPDIR=/tmp/fm-live-claude-launch-base/gotmp
+  | bash-3.2$ export FM_TASK_ID=live-claude-launch-base
+  | bash-3.2$ env -u CURSOR_AGENT -u CURSOR_INVOKED_AS -u GEMINI_CLI CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false CLAUDE_CODE_SEND_FEEDBACK=0 claude --dangerously-skip-permissions --settings '{"feedbackDraf
+  | FAKE-CLAUDE-STARTED argc=6

@@ -1,0 +1,27 @@
+== run root: /Users/lijo/.no-mistakes/worktrees/2524c5f7b1fc/01M455Z9MH2RQ5MSVADGC9562F (1b7d69d) pane shell: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed.WwUPCb/case/fake/fakebin/pane-shell
+== fm-spawn exit: 0
+warning: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed.WwUPCb/case/home/data/live-claude-launch-fixed/launch-brief.md records no delivery contract line (scaffolded before ship briefs recorded one); launching on the explicit --mode no-mistakes - confirm its definition of done matches
+spawned live-claude-launch-fixed harness=claude kind=ship mode=no-mistakes yolo=off window=firstmate:fm-live-claude-launch-fixed worktree=/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed.WwUPCb/case/pool/1/wt
+== typed send-keys -l payload(s), byte length:
+  190 bytes: send-keys -t firstmate:fm-live-claude-launch-fixed -l . '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed.WwUPCb/case/home/state/li
+== launch file: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed.WwUPCb/case/home/state/live-claude-launch-fixed.launch mode=600 bytes=1154
+== stand-in claude argv log:
+  argc=30
+  --append-system-prompt present: 1
+  
+  The Definition of done's rule that `--intent` must be self-sufficient still governs the string you pass: resolve any report, decision, or PR the intent below refers to into its substance rather than passing the pointer.
+  
+  ## Captain intent authorized for --intent
+  brief for live-claude-launch-fixed>
+== pane capture (tail):
+  | The default interactive shell is now zsh.
+  | To update your account to use zsh, please run `chsh -s /bin/zsh`.
+  | For more details, please visit https://support.apple.com/kb/HT208050.
+  | bash-3.2$ treehouse get
+  | The default interactive shell is now zsh.
+  | To update your account to use zsh, please run `chsh -s /bin/zsh`.
+  | For more details, please visit https://support.apple.com/kb/HT208050.
+  | bash-3.2$ export GOTMPDIR=/tmp/fm-live-claude-launch-fixed/gotmp
+  | bash-3.2$ export FM_TASK_ID=live-claude-launch-fixed
+  | bash-3.2$ . '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed.WwUPCb/case/home/state/live-claude-launch-fixed.launch'
+  | FAKE-CLAUDE-STARTED argc=6

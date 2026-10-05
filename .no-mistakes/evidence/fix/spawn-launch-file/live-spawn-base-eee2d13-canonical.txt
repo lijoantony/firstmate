@@ -1,0 +1,21 @@
+== treehouse subshell: bash --noediting
+== run root: /var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T//fm-base-eee2d13.OEpZxR (snapshot) pane shell: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-base-canon.jab3zF/case/fake/fakebin/pane-shell
+== fm-spawn exit: 0
+warning: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-base-canon.jab3zF/case/home/data/live-claude-launch-base-canon/launch-brief.md records no delivery contract line (scaffolded before ship briefs recorded one); launching on the explicit --mode no-mistakes - confirm its definition of done matches
+spawned live-claude-launch-base-canon harness=claude kind=ship mode=no-mistakes yolo=off window=firstmate:fm-live-claude-launch-base-canon worktree=/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-base-canon.jab3zF/case/pool/1/wt
+== typed send-keys -l payload(s), byte length:
+  1219 bytes: send-keys -t firstmate:fm-live-claude-launch-base-canon -l env -u CURSOR_AGENT -u CURSOR_INVOKED_AS -u GEMINI_CLI CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false CLA
+== launch file: none
+== stand-in claude argv log:
+  EMPTY: claude never started
+== pane capture (tail):
+  | The default interactive shell is now zsh.
+  | To update your account to use zsh, please run `chsh -s /bin/zsh`.
+  | For more details, please visit https://support.apple.com/kb/HT208050.
+  | bash-3.2$ treehouse get
+  | The default interactive shell is now zsh.
+  | To update your account to use zsh, please run `chsh -s /bin/zsh`.
+  | For more details, please visit https://support.apple.com/kb/HT208050.
+  | bash-3.2$ export GOTMPDIR=/tmp/fm-live-claude-launch-base-canon/gotmp
+  | bash-3.2$ export FM_TASK_ID=live-claude-launch-base-canon
+  | bash-3.2$ env -u CURSOR_AGENT -u CURSOR_INVOKED_AS -u GEMINI_CLI CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false CLAUDE_CODE_SEND_FEEDBACK=0 claude --dangerously-skip-permissions --settings '{"feedbackDraf

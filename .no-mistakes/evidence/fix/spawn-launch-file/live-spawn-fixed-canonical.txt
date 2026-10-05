@@ -1,0 +1,27 @@
+== treehouse subshell: bash --noediting
+== run root: /Users/lijo/.no-mistakes/worktrees/2524c5f7b1fc/01M455Z9MH2RQ5MSVADGC9562F (1b7d69d) pane shell: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed-canon.7LJaNV/case/fake/fakebin/pane-shell
+== fm-spawn exit: 0
+warning: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed-canon.7LJaNV/case/home/data/live-claude-launch-fixed-canon/launch-brief.md records no delivery contract line (scaffolded before ship briefs recorded one); launching on the explicit --mode no-mistakes - confirm its definition of done matches
+spawned live-claude-launch-fixed-canon harness=claude kind=ship mode=no-mistakes yolo=off window=firstmate:fm-live-claude-launch-fixed-canon worktree=/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed-canon.7LJaNV/case/pool/1/wt
+== typed send-keys -l payload(s), byte length:
+  208 bytes: send-keys -t firstmate:fm-live-claude-launch-fixed-canon -l . '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed-canon.7LJaNV/case/h
+== launch file: /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed-canon.7LJaNV/case/home/state/live-claude-launch-fixed-canon.launch mode=600 bytes=1166
+== stand-in claude argv log:
+  argc=30
+  --append-system-prompt present: 1
+  efinition of done's rule that `--intent` must be self-sufficient still governs the string you pass: resolve any report, decision, or PR the intent below refers to into its substance rather than passing the pointer.
+  
+  ## Captain intent authorized for --intent
+  brief for live-claude-launch-fixed-canon>
+== pane capture (tail):
+  | The default interactive shell is now zsh.
+  | To update your account to use zsh, please run `chsh -s /bin/zsh`.
+  | For more details, please visit https://support.apple.com/kb/HT208050.
+  | bash-3.2$ treehouse get
+  | The default interactive shell is now zsh.
+  | To update your account to use zsh, please run `chsh -s /bin/zsh`.
+  | For more details, please visit https://support.apple.com/kb/HT208050.
+  | bash-3.2$ export GOTMPDIR=/tmp/fm-live-claude-launch-fixed-canon/gotmp
+  | bash-3.2$ export FM_TASK_ID=live-claude-launch-fixed-canon
+  | bash-3.2$ . '/private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-live-launch-fixed-canon.7LJaNV/case/home/state/live-claude-launch-fixed-canon.launch'
+  | FAKE-CLAUDE-STARTED argc=6

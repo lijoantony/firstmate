@@ -1,0 +1,17 @@
+== fm-teardown under test: /Users/lijo/.no-mistakes/worktrees/2524c5f7b1fc/01M455Z9MH2RQ5MSVADGC9562F/bin/fm-teardown.sh
+-- before teardown: 1 launch file(s) in state: task-x1.launch
+-- teardown exit: 0
+   stdout: teardown task-x1 complete (window firstmate:fm-task-x1, worktree /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-teardown-tests.XuSBun/launch-file-main/wt)
+   stdout: Backlog: task-x1 just finished (this home keeps no markdown backlog at /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-teardown-tests.XuSBun/launch-file-main/data/backlog.md). Update /private/var/folders/wc/cqr55q8j01ggnmnyvfsflky80000gn/T/fm-teardown-tests.XuSBun/launch-file-main/data/backlog.md - move task-x1 to Done, keep Done to the 10 most recent, then re-scan Queued and dispatch only work whose blockers are gone and date is due.
+-- rm calls naming a .launch path:
+   <case>/state/task-x1.launch
+RESULT task launch file: removed
+-- before teardown: child launch files: child-a.launch child-b.launch 
+-- forced secondmate teardown exit: 0
+-- rm calls naming a .launch path:
+   <case>/secondmate-home/state/child-a.launch
+   <case>/secondmate-home/state/child-b.launch
+   <case>/state/task-x1.launch
+RESULT child sweep rm call names child-a.launch: yes
+RESULT child sweep rm call names child-b.launch: yes
+RESULT secondmate home: removed
