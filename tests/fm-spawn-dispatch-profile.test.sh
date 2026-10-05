@@ -964,7 +964,11 @@ test_claude_launch_types_a_short_line_that_sources_the_launch_file() {
   expect_code 0 "$status" "claude crewmate spawn should succeed"$'\n'"$out"
   launch_file="$HOME_DIR/state/$id.launch"
   [ -f "$launch_file" ] || fail "claude spawn did not write the launch command to $launch_file"
-  mode=$(stat -f '%Lp' "$launch_file" 2>/dev/null || stat -c '%a' "$launch_file")
+  if [ "$(uname)" = Darwin ]; then
+    mode=$(stat -f %Lp "$launch_file")
+  else
+    mode=$(stat -c %a "$launch_file")
+  fi
   [ "$mode" = 600 ] || fail "launch file mode is $mode, want 600"
   raw=$(tail -n 1 "$LAUNCH_LOG.raw")
   [ "$raw" = ". '$launch_file'" ] || fail "the pane was not typed the short sourcing line"$'\n'"actual: $raw"
