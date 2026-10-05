@@ -953,6 +953,32 @@ test_claude_task_launch_carries_control_channel_authority() {
   pass "a claude task launch establishes only Firstmate's task control channels through the system prompt"
 }
 
+test_claude_launch_types_a_short_line_that_sources_the_launch_file() {
+  local rec id out status raw launch_file mode
+  id=profile-claude-launch-file-z22
+  rec=$(make_spawn_case profile-claude-launch-file claude "$id")
+  read_case_record "$rec"
+
+  out=$(run_ship_spawn "$HOME_DIR" "$WT_DIR" "$FAKEBIN_DIR" "$LAUNCH_LOG" "$id" "$PROJ_DIR")
+  status=$?
+  expect_code 0 "$status" "claude crewmate spawn should succeed"$'\n'"$out"
+  launch_file="$HOME_DIR/state/$id.launch"
+  [ -f "$launch_file" ] || fail "claude spawn did not write the launch command to $launch_file"
+  if [ "$(uname)" = Darwin ]; then
+    mode=$(stat -f %Lp "$launch_file")
+  else
+    mode=$(stat -c %a "$launch_file")
+  fi
+  [ "$mode" = 600 ] || fail "launch file mode is $mode, want 600"
+  raw=$(tail -n 1 "$LAUNCH_LOG.raw")
+  [ "$raw" = ". '$launch_file'" ] || fail "the pane was not typed the short sourcing line"$'\n'"actual: $raw"
+  [ "${#raw}" -lt 1024 ] || fail "the typed launch line is ${#raw} bytes, over the terminal line limit"
+  [ "$(wc -c < "$launch_file")" -gt 1024 ] || fail "fixture no longer exercises a launch longer than the terminal line limit"
+  assert_contains "$(cat "$launch_file")" "claude --dangerously-skip-permissions" \
+    "launch file does not hold the claude launch command"
+  pass "a claude launch longer than the terminal line limit is typed as a short line that sources its launch file"
+}
+
 test_claude_secondmate_launch_omits_task_control_channel_authority() {
   local rec id sm out status launch
   id=profile-secondmate-control-channel-z21b
@@ -1457,6 +1483,7 @@ test_claude_permission_mode_invalid_refuses_before_endpoint_or_metadata
 test_non_claude_harness_ignores_claude_permission_mode
 test_non_claude_harness_ignores_config_dir
 test_claude_task_launch_carries_control_channel_authority
+test_claude_launch_types_a_short_line_that_sources_the_launch_file
 test_claude_secondmate_launch_omits_task_control_channel_authority
 test_claude_crewmate_launch_carries_the_attribution_policy
 test_claude_secondmate_launch_carries_the_attribution_policy

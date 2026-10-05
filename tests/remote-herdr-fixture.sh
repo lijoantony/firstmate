@@ -38,6 +38,13 @@ SEND_FAIL='$send_fail'
 SOCKET='$socket'
 SH
   cat >> "$script" <<'SH'
+# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
+_fm_args=()
+for _fm_a in "$@"; do
+  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
+  _fm_args+=("$_fm_a")
+done
+[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 printf '%s\n' "$*" >> "$LOG"
 jq_state() { jq "$@" "$STATE"; }
 save() { tmp="$STATE.tmp.$$"; cat > "$tmp" && mv "$tmp" "$STATE"; }
