@@ -78,13 +78,6 @@ SH
   cat > "$fakebin/treehouse" <<'SH'
 #!/usr/bin/env bash
 set -u
-# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
-_fm_args=()
-for _fm_a in "$@"; do
-  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
-  _fm_args+=("$_fm_a")
-done
-[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 printf 'treehouse %s\n' "$*" >> "${FM_FAKE_TMUX_LOG:-/dev/null}"
 case "${1:-}" in
   get)
@@ -139,13 +132,6 @@ make_fake_no_mistakes() {
   cat > "$fakebin/no-mistakes" <<'SH'
 #!/usr/bin/env bash
 set -eu
-# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
-_fm_args=()
-for _fm_a in "$@"; do
-  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
-  _fm_args+=("$_fm_a")
-done
-[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 case "${1:-}" in
   init) touch .no-mistakes-init ;;
   doctor) touch .no-mistakes-doctor ;;
@@ -164,13 +150,6 @@ make_recording_no_mistakes() {
   cat > "$fakebin/no-mistakes" <<'SH'
 #!/usr/bin/env bash
 set -eu
-# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
-_fm_args=()
-for _fm_a in "$@"; do
-  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
-  _fm_args+=("$_fm_a")
-done
-[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 printf '%s\t%s\n' "$PWD" "${1:-}" >> "$FM_FAKE_NO_MISTAKES_LOG"
 if [ "$(basename "$PWD")" = "${FM_FAKE_NO_MISTAKES_FAIL_PROJECT:-}" ]; then
   exit 1
@@ -200,13 +179,6 @@ make_firstmate_git_root() {
   printf '# Firstmate\n' > "$home/AGENTS.md"
   cat > "$home/bin/fm-guard.sh" <<'SH'
 #!/usr/bin/env bash
-# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
-_fm_args=()
-for _fm_a in "$@"; do
-  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
-  _fm_args+=("$_fm_a")
-done
-[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 exit 0
 SH
   chmod +x "$home/bin/fm-guard.sh"

@@ -74,13 +74,6 @@ PUBLISH_MANIFEST="$TMP_ROOT/publication.manifest"
 REAL_MV=$(command -v mv)
 cat > "$PUBLISH_FAKEBIN/mv" <<'SH'
 #!/usr/bin/env bash
-# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
-_fm_args=()
-for _fm_a in "$@"; do
-  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
-  _fm_args+=("$_fm_a")
-done
-[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 destination=${!#}
 case "$destination" in
   */.fm-secondmate-home)
@@ -157,13 +150,6 @@ printf 'FMX_PAIRING_TOKEN=repro-token\n' > "$PARENT/.env"
 # --- deterministic SSH boundary, identical shape to the lifecycle e2e suite --
 cat > "$FAKEBIN/fake-ssh" <<'SH'
 #!/usr/bin/env bash
-# fm-spawn types `. '<state>/<id>.launch'`; read the command it sources.
-_fm_args=()
-for _fm_a in "$@"; do
-  case "$_fm_a" in ". '"*".launch'") _fm_f=${_fm_a#". '"}; _fm_f=${_fm_f%"'"}; [ -f "$_fm_f" ] && _fm_a=$(cat "$_fm_f") ;; esac
-  _fm_args+=("$_fm_a")
-done
-[ ${#_fm_args[@]} -gt 0 ] && set -- "${_fm_args[@]}"
 count=$(cat "$FM_FAKE_SSH_COUNT" 2>/dev/null || echo 0)
 printf '%s\n' "$((count + 1))" > "$FM_FAKE_SSH_COUNT"
 while [ "$#" -gt 0 ]; do
